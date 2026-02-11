@@ -1,7 +1,8 @@
 public enum RoomEventType
 {
-    None,
-    Enemies,
+    Start,
+    NormalEnemies,
     Merchant,
-    Treasure
+    Treasure,
+    Boss
 }
