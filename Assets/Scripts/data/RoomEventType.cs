@@ -4,5 +4,6 @@ public enum RoomEventType
     NormalEnemies,
     Merchant,
     Treasure,
-    Boss
+    Boss,
+    None
 }

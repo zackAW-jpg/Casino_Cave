@@ -18,4 +18,7 @@ public class RoomState
     [Header("Progress flags")]
     public bool visited;
     public bool cleared;
+
+    public int distanceFromStart;
+
 }

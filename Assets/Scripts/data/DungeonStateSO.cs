@@ -5,13 +5,13 @@ using UnityEngine;
 public class DungeonStateSO : ScriptableObject
 {
     [Header("Runtime: where the player currently is (grid coord)")]
-    public Vector2Int currentRoomCoord = Vector2Int.zero;
+    public Vector2Int currentRoomCoord = Vector2Int.zero; // player starts at coords 0,0
 
     [Header("Saved rooms (Unity can serialize lists)")]
-    public List<RoomState> rooms = new List<RoomState>();
+    public List<RoomState> rooms = new List<RoomState>(); // create list that unity can serialize
 
     // Fast lookup table (Unity does NOT serialize Dictionary, so this is runtime-only)
-    private Dictionary<Vector2Int, RoomState> roomLookup = new Dictionary<Vector2Int, RoomState>();
+    private Dictionary<Vector2Int, RoomState> roomLookup = new Dictionary<Vector2Int, RoomState>(); // runtinme only dictionary mapping rooms to coords
 
     private void OnEnable()
     {
@@ -36,7 +36,7 @@ public class DungeonStateSO : ScriptableObject
         // A small safety limit so we don't infinite-loop if constraints are impossible
         int safety = 0;
 
-        while (rooms.Count < totalRooms && safety < 100000)
+        while (rooms.Count < totalRooms && safety < 100)
         {
             safety++;
 
@@ -119,13 +119,13 @@ public class DungeonStateSO : ScriptableObject
         // Reset distances
         for (int i = 0; i < rooms.Count; i++)
         {
-            rooms[i].distanceFromStart = -1;
+            rooms[i].distanceFromStart = -1; // start all rooms at -1 distance
         }
 
         Queue<RoomState> queue = new Queue<RoomState>();
 
         RoomState start = roomLookup[Vector2Int.zero];
-        start.distanceFromStart = 0;
+        start.distanceFromStart = 0; // set starting room to 0 distance
 
         queue.Enqueue(start);
 
@@ -145,13 +145,13 @@ public class DungeonStateSO : ScriptableObject
     {
         Vector2Int neighborCoord = current.coord + delta;
 
-        if (!roomLookup.TryGetValue(neighborCoord, out RoomState neighbor))
+        if (!roomLookup.TryGetValue(neighborCoord, out RoomState neighbor)) //checks if theres a room at the coordinate
             return;
 
-        if (neighbor.distanceFromStart != -1)
+        if (neighbor.distanceFromStart != -1) //checks if distance has already been assigned
             return;
 
-        neighbor.distanceFromStart = current.distanceFromStart + 1;
+        neighbor.distanceFromStart = current.distanceFromStart + 1; //since we call this function from a previous room with distance already established
         queue.Enqueue(neighbor);
     }
 
@@ -164,7 +164,7 @@ public class DungeonStateSO : ScriptableObject
         {
             RoomState r = rooms[i];
 
-            if (r.eventType == RoomEventType.Start)
+            if (r.eventType == RoomEventType.Start) // make sure not start room
                 continue;
 
             if (r.distanceFromStart >= minDist && r.distanceFromStart <= maxDist)
