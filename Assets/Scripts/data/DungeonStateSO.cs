@@ -13,6 +13,9 @@ public class DungeonStateSO : ScriptableObject
     // Fast lookup table (Unity does NOT serialize Dictionary, so this is runtime-only)
     private Dictionary<Vector2Int, RoomState> roomLookup = new Dictionary<Vector2Int, RoomState>(); // runtinme only dictionary mapping rooms to coords
 
+    private HashSet<Vector2Int> reservedCoords = new HashSet<Vector2Int>();
+
+
     private void OnEnable()
     {
         RebuildLookup();
@@ -27,6 +30,11 @@ public class DungeonStateSO : ScriptableObject
         // 2) Create the start room at (0,0)
         CreateRoom(Vector2Int.zero, RoomEventType.Start);
         currentRoomCoord = Vector2Int.zero;
+
+        reservedCoords.Clear();
+
+        // Reserve north of start for overworld entrance
+        reservedCoords.Add(Vector2Int.up);
 
         // 3) Grow the dungeon by adding adjacent rooms until we reach totalRooms
         // We keep a list of existing coords so we can expand from them
@@ -49,6 +57,9 @@ public class DungeonStateSO : ScriptableObject
 
             // If a room already exists there, skip
             if (roomLookup.ContainsKey(next))
+                continue;
+
+            if (reservedCoords.Contains(next))
                 continue;
 
             // Create a normal room there
