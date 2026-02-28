@@ -60,11 +60,12 @@ public class PlayerShooting : MonoBehaviour
         Vector2 aimDir = (firePoint != null ? firePoint.right : (Vector3)GetAimDirection()).normalized;
 
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, spawnRot);
+        Destroy(bullet, 5f);
 
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.linearVelocity = aimDir * bulletSpeed;
+            rb.velocity = aimDir * bulletSpeed;
         }
     }
 
