@@ -17,12 +17,15 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
-        if (_cam == null || Mouse.current == null)
+        if (_cam == null)
             return;
 
         AimAtMouse();
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        bool shootPressed = (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                           || Input.GetMouseButtonDown(0);
+
+        if (shootPressed)
         {
             Shoot();
         }
@@ -33,7 +36,9 @@ public class PlayerShooting : MonoBehaviour
         if (firePoint == null)
             return;
 
-        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+        Vector2 mouseScreenPos = Mouse.current != null
+            ? Mouse.current.position.ReadValue()
+            : (Vector2)Input.mousePosition;
         Vector3 mouseWorldPos = _cam.ScreenToWorldPoint(mouseScreenPos);
         mouseWorldPos.z = firePoint.position.z;
 
@@ -45,15 +50,37 @@ public class PlayerShooting : MonoBehaviour
 
     void Shoot()
     {
-        if (bulletPrefab == null || firePoint == null)
+        if (bulletPrefab == null)
             return;
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Vector3 spawnPos = (firePoint != null && firePoint.IsChildOf(transform))
+            ? firePoint.position
+            : transform.position;
+        Quaternion spawnRot = firePoint != null ? firePoint.rotation : GetAimRotation();
+        Vector2 aimDir = (firePoint != null ? firePoint.right : (Vector3)GetAimDirection()).normalized;
+
+        GameObject bullet = Instantiate(bulletPrefab, spawnPos, spawnRot);
 
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.linearVelocity = (Vector2)firePoint.right * bulletSpeed;
+            rb.linearVelocity = aimDir * bulletSpeed;
         }
+    }
+
+    Vector2 GetAimDirection()
+    {
+        if (_cam == null) return Vector2.right;
+        Vector2 mouseScreenPos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
+        Vector3 mouseWorldPos = _cam.ScreenToWorldPoint(mouseScreenPos);
+        mouseWorldPos.z = transform.position.z;
+        return (mouseWorldPos - transform.position).normalized;
+    }
+
+    Quaternion GetAimRotation()
+    {
+        Vector2 dir = GetAimDirection();
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        return Quaternion.AngleAxis(angle, Vector3.forward);
     }
 }
