@@ -1,140 +1,59 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerShooting : MonoBehaviour
 {
     [Header("Setup")]
-    public Transform weaponPivot;
-    public Camera mainCamera;
+    public Transform firePoint;         // where bullets come from
+    public GameObject bulletPrefab;     // prefab with Rigidbody2D
+    public float bulletSpeed = 15f;
 
-    [Header("Weapons")]
-    public List<Weapon> weapons = new List<Weapon>();
-    public int startingWeaponIndex = 0;
-
-    private int _currentWeaponIndex = -1;
+    private Camera _cam;
 
     void Awake()
     {
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main;
-        }
-    }
-
-    void Start()
-    {
-        SelectWeapon(startingWeaponIndex);
+        _cam = Camera.main;
     }
 
     void Update()
     {
-        if (weaponPivot != null)
-        {
-            AimAtMouse();
-        }
-
-        HandleShootInput();
-        HandleWeaponSelectionInput();
-    }
-
-    private void AimAtMouse()
-    {
-        if (mainCamera == null || Mouse.current == null)
-        {
+        if (_cam == null || Mouse.current == null)
             return;
-        }
 
-        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
-        Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, Mathf.Abs(mainCamera.transform.position.z - weaponPivot.position.z)));
-
-        Vector2 direction = (mouseWorldPos - weaponPivot.position).normalized;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        weaponPivot.rotation = Quaternion.Euler(0f, 0f, angle);
-
-        if (angle > 90f || angle < -90f)
-        {
-            weaponPivot.localScale = new Vector3(1f, -1f, 1f);
-        }
-        else
-        {
-            weaponPivot.localScale = new Vector3(1f, 1f, 1f);
-        }
-    }
-
-    private void HandleShootInput()
-    {
-        if (Mouse.current == null)
-        {
-            return;
-        }
+        AimAtMouse();
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            Weapon weapon = GetCurrentWeapon();
-            if (weapon != null)
-            {
-                weapon.TryFire();
-            }
+            Shoot();
         }
     }
 
-    private void HandleWeaponSelectionInput()
+    void AimAtMouse()
     {
-        if (Keyboard.current == null)
-        {
+        if (firePoint == null)
             return;
-        }
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame)
-        {
-            SelectWeapon(0);
-        }
-        else if (Keyboard.current.digit2Key.wasPressedThisFrame)
-        {
-            SelectWeapon(1);
-        }
-        else if (Keyboard.current.digit3Key.wasPressedThisFrame)
-        {
-            SelectWeapon(2);
-        }
-        else if (Keyboard.current.digit4Key.wasPressedThisFrame)
-        {
-            SelectWeapon(3);
-        }
+        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+        Vector3 mouseWorldPos = _cam.ScreenToWorldPoint(mouseScreenPos);
+        mouseWorldPos.z = firePoint.position.z;
+
+        Vector2 dir = (mouseWorldPos - firePoint.position).normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        firePoint.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
-    private void SelectWeapon(int index)
+    void Shoot()
     {
-        if (weapons == null || weapons.Count == 0)
-        {
-            _currentWeaponIndex = -1;
+        if (bulletPrefab == null || firePoint == null)
             return;
-        }
 
-        if (index < 0 || index >= weapons.Count)
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        if (rb != null)
         {
-            return;
+            rb.velocity = (Vector2)firePoint.right * bulletSpeed;
         }
-
-        _currentWeaponIndex = index;
-
-        for (int i = 0; i < weapons.Count; i++)
-        {
-            if (weapons[i] == null) continue;
-            weapons[i].gameObject.SetActive(i == _currentWeaponIndex);
-        }
-    }
-
-    private Weapon GetCurrentWeapon()
-    {
-        if (_currentWeaponIndex < 0 || _currentWeaponIndex >= weapons.Count)
-        {
-            return null;
-        }
-
-        return weapons[_currentWeaponIndex];
     }
 }
-
