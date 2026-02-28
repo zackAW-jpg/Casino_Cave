@@ -53,7 +53,7 @@ public class PlayerShooting : MonoBehaviour
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.velocity = (Vector2)firePoint.right * bulletSpeed;
+            rb.linearVelocity = (Vector2)firePoint.right * bulletSpeed;
         }
     }
 }
