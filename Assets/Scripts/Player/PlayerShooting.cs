@@ -8,11 +8,20 @@ public class PlayerShooting : MonoBehaviour
     public GameObject bulletPrefab;     // prefab with Rigidbody2D
     public float bulletSpeed = 15f;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip gunshotClip;
+
     private Camera _cam;
 
     void Awake()
     {
         _cam = Camera.main;
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -63,6 +72,11 @@ public class PlayerShooting : MonoBehaviour
         if (rb != null)
         {
             rb.linearVelocity = aimDir * bulletSpeed;
+        }
+
+        if (audioSource != null && gunshotClip != null)
+        {
+            audioSource.PlayOneShot(gunshotClip);
         }
     }
 
