@@ -17,13 +17,12 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
-        if (_cam == null)
+        if (_cam == null || Mouse.current == null)
             return;
 
         AimAtMouse();
 
-        bool shootPressed = (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-                           || Input.GetMouseButtonDown(0);
+        bool shootPressed = Mouse.current.leftButton.wasPressedThisFrame;
 
         if (shootPressed)
         {
@@ -36,9 +35,7 @@ public class PlayerShooting : MonoBehaviour
         if (firePoint == null)
             return;
 
-        Vector2 mouseScreenPos = Mouse.current != null
-            ? Mouse.current.position.ReadValue()
-            : (Vector2)Input.mousePosition;
+        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
         Vector3 mouseWorldPos = _cam.ScreenToWorldPoint(mouseScreenPos);
         mouseWorldPos.z = firePoint.position.z;
 
@@ -72,7 +69,7 @@ public class PlayerShooting : MonoBehaviour
     Vector2 GetAimDirection()
     {
         if (_cam == null) return Vector2.right;
-        Vector2 mouseScreenPos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
+        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
         Vector3 mouseWorldPos = _cam.ScreenToWorldPoint(mouseScreenPos);
         mouseWorldPos.z = transform.position.z;
         return (mouseWorldPos - transform.position).normalized;
