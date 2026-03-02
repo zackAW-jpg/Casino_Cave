@@ -21,6 +21,9 @@ public class CoinBullet : MonoBehaviour
     {
         if (other.isTrigger) return;
 
+        // Ignore hitting the player who fired
+        if (other.CompareTag("Player")) return;
+
         if (damage > 0)
         {
             var health = other.GetComponent<Health>();

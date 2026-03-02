@@ -12,6 +12,12 @@ public class PlayerShooting : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip gunshotClip;
 
+    [Header("Coin Gun Settings")]
+    public int baseDamage = 1;
+
+    private int currentStreak = 0;
+    private int currentMultiplier = 1;
+
     private Camera _cam;
 
     void Awake()
@@ -66,17 +72,40 @@ public class PlayerShooting : MonoBehaviour
         Vector2 aimDir = (firePoint != null ? firePoint.right : (Vector3)GetAimDirection()).normalized;
 
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, spawnRot);
-        Destroy(bullet, 5f);
-
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
             rb.linearVelocity = aimDir * bulletSpeed;
         }
 
-        if (audioSource != null && gunshotClip != null)
+        CoinBullet coinBullet = bullet.GetComponent<CoinBullet>();
+        if (coinBullet != null)
         {
-            audioSource.PlayOneShot(gunshotClip);
+            bool isHeads = Random.value < 0.5f;
+
+            int damage = 0;
+
+            if (isHeads)
+            {
+                damage = baseDamage * currentMultiplier;
+                currentStreak++;
+                currentMultiplier *= 2;
+            }
+            else
+            {
+                currentStreak = 0;
+                currentMultiplier = 1;
+            }
+
+            coinBullet.damage = damage;
+            coinBullet.isHeads = isHeads;
+
+            Debug.Log($"Shot coin: {(isHeads ? "HEADS" : "TAILS")}, damage={damage}, streak={currentStreak}, nextMultiplier={currentMultiplier}");
+
+            if (audioSource != null && gunshotClip != null)
+            {
+                audioSource.PlayOneShot(gunshotClip);
+            }
         }
     }
 
