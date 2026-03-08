@@ -19,5 +19,11 @@ public class DungeonBootstrap : MonoBehaviour
         }
 
         dungeonState.GenerateNewDungeon(totalRooms, bossMinDistance, bossMaxDistance, merchantCount, treasureCount);
+
+        var spawner = FindObjectOfType<DungeonRoomSpawner>();
+        if (spawner != null)
+        {
+            spawner.BuildDungeonAndPlacePlayer();
+        }
     }
 }

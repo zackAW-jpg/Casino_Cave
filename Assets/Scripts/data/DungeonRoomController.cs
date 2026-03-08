@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class DungeonRoomController : MonoBehaviour
 {
+    [Header("Set by DungeonRoomSpawner at runtime")]
+    public Vector2Int coord;
+    public DungeonRoomSpawner spawner;
     public DungeonStateSO dungeonState;
     public Transform playerTransform;
 
@@ -17,16 +20,25 @@ public class DungeonRoomController : MonoBehaviour
     public Transform spawnSouth;
     public Transform spawnWest;
 
-    private void Start()
+    public void SetupFromRoomState(RoomState room)
     {
-        if (dungeonState == null)
-        {
-            Debug.LogError("DungeonRoomController has no DungeonStateSO assigned.", this);
-            return;
-        }
+        if (doorNorth != null) doorNorth.SetActive(room.doorNorth);
+        if (doorEast != null) doorEast.SetActive(room.doorEast);
+        if (doorSouth != null) doorSouth.SetActive(room.doorSouth);
+        if (doorWest != null) doorWest.SetActive(room.doorWest);
+    }
 
-        UpdateRoomView();
-        MovePlayerToSpawnInCurrentRoomOnStart();
+
+    public Transform GetSpawnForSide(DoorDirection side)
+    {
+        switch (side)
+        {
+            case DoorDirection.North: return spawnNorth;
+            case DoorDirection.East: return spawnEast;
+            case DoorDirection.South: return spawnSouth;
+            case DoorDirection.West: return spawnWest;
+            default: return null;
+        }
     }
 
     public void TryMoveToAdjacentRoom(DoorDirection direction)
@@ -37,90 +49,67 @@ public class DungeonRoomController : MonoBehaviour
             return;
         }
 
-        Vector2Int current = dungeonState.currentRoomCoord;
-        Vector2Int delta = GetDeltaForDirection(direction);
-        Vector2Int targetCoord = current + delta;
+        if (spawner == null)
+        {
+            Debug.LogError("DungeonRoomController has no spawner assigned. Use DungeonRoomSpawner to build the dungeon.", this);
+            return;
+        }
 
-        if (!dungeonState.TryGetRoom(targetCoord, out RoomState targetRoom))
+        Vector2Int delta = GetDeltaForDirection(direction);
+        Vector2Int targetCoord = coord + delta;
+
+        if (!dungeonState.TryGetRoom(targetCoord, out _))
         {
             Debug.LogWarning($"No room exists at {targetCoord} for direction {direction}.", this);
             return;
         }
 
-        dungeonState.currentRoomCoord = targetCoord;
+        DungeonRoomController targetRoom = spawner.GetRoomAt(targetCoord);
+        if (targetRoom == null)
+        {
+            Debug.LogWarning($"No room instance at {targetCoord}.", this);
+            return;
+        }
 
-        UpdateRoomView();
-        MovePlayerToSpawnInNewRoom(direction);
+        dungeonState.currentRoomCoord = targetCoord;
+        MovePlayerToSpawnInNewRoom(direction, targetRoom);
     }
 
-    private Vector2Int GetDeltaForDirection(DoorDirection direction)
+    private static Vector2Int GetDeltaForDirection(DoorDirection direction)
     {
         switch (direction)
         {
-            case DoorDirection.North:
-                return Vector2Int.up;
-            case DoorDirection.East:
-                return Vector2Int.right;
-            case DoorDirection.South:
-                return Vector2Int.down;
-            case DoorDirection.West:
-                return Vector2Int.left;
-            default:
-                return Vector2Int.zero;
+            case DoorDirection.North: return Vector2Int.up;
+            case DoorDirection.East: return Vector2Int.right;
+            case DoorDirection.South: return Vector2Int.down;
+            case DoorDirection.West: return Vector2Int.left;
+            default: return Vector2Int.zero;
         }
     }
 
-    private void UpdateRoomView()
-    {
-        if (!dungeonState.TryGetRoom(dungeonState.currentRoomCoord, out RoomState room))
-        {
-            Debug.LogError($"No RoomState found at coord {dungeonState.currentRoomCoord}.", this);
-            return;
-        }
 
-        if (doorNorth != null) doorNorth.SetActive(room.doorNorth);
-        if (doorEast != null) doorEast.SetActive(room.doorEast);
-        if (doorSouth != null) doorSouth.SetActive(room.doorSouth);
-        if (doorWest != null) doorWest.SetActive(room.doorWest);
-    }
-
-    private void MovePlayerToSpawnInCurrentRoomOnStart()
+    private void MovePlayerToSpawnInNewRoom(DoorDirection enteredFromDirection, DungeonRoomController targetRoom)
     {
         if (playerTransform == null) return;
 
-        if (!dungeonState.TryGetRoom(dungeonState.currentRoomCoord, out RoomState room))
-        {
-            return;
-        }
-
-        playerTransform.position = spawnNorth != null ? spawnNorth.position : playerTransform.position;
-    }
-
-    private void MovePlayerToSpawnInNewRoom(DoorDirection enteredFromDirection)
-    {
-        if (playerTransform == null) return;
-
-        Transform spawn = null;
-
-        switch (enteredFromDirection)
-        {
-            case DoorDirection.North:
-                spawn = spawnSouth;
-                break;
-            case DoorDirection.East:
-                spawn = spawnWest;
-                break;
-            case DoorDirection.South:
-                spawn = spawnNorth;
-                break;
-            case DoorDirection.West:
-                spawn = spawnEast;
-                break;
-        }
+        DoorDirection spawnSide = GetOppositeDirection(enteredFromDirection);
+        Transform spawn = targetRoom.GetSpawnForSide(spawnSide);
 
         if (spawn != null)
         {
             playerTransform.position = spawn.position;
+        }
+    }
+
+    private static DoorDirection GetOppositeDirection(DoorDirection direction)
+    {
+        switch (direction)
+        {
+            case DoorDirection.North: return DoorDirection.South;
+            case DoorDirection.East: return DoorDirection.West;
+            case DoorDirection.South: return DoorDirection.North;
+            case DoorDirection.West: return DoorDirection.East;
+            default: return direction;
         }
     }
 }
