@@ -8,6 +8,8 @@ public class DungeonRoomSpawner : MonoBehaviour
     public float roomWorldSize = 20f;
     public Transform playerTransform;
 
+    public GameObject securityGuardPrefab;
+
     [Header("Start room spawn")]
     [Tooltip("Which spawn point in the start room (0,0) to place the player at.")]
     public DoorDirection startRoomSpawnSide = DoorDirection.North;
@@ -43,6 +45,18 @@ public class DungeonRoomSpawner : MonoBehaviour
             ctrl.SetupFromRoomState(roomState);
 
             _roomInstances[roomState.coord] = ctrl;
+
+            // Spawn one security guard in enemy rooms
+            if (securityGuardPrefab != null && roomState.eventType == RoomEventType.NormalEnemies)
+            {
+                Vector3 guardPos = instance.transform.position; // center of the room
+                GameObject guard = Instantiate(securityGuardPrefab, guardPos, Quaternion.identity, instance.transform);
+                SecurityGuard guardAI = guard.GetComponent<SecurityGuard>();
+                if (guardAI != null && playerTransform != null)
+                {
+                    guardAI.target = playerTransform;
+                }
+            }
         }
 
         Debug.Log($"DungeonRoomSpawner: Spawned {_roomInstances.Count} rooms.");

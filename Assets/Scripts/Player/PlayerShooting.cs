@@ -81,6 +81,8 @@ public class PlayerShooting : MonoBehaviour
         CoinBullet coinBullet = bullet.GetComponent<CoinBullet>();
         if (coinBullet != null)
         {
+            coinBullet.knockbackDirection = aimDir;
+
             bool isHeads = Random.value < 0.5f;
 
             int damage = 0;

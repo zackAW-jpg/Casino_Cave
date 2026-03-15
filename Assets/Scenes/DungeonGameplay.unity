@@ -865,6 +865,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1473123839722449136, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2088222574}
+    - targetCorrespondingSourceObject: {fileID: 1473123839722449136, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2088222582}
   m_SourcePrefab: {fileID: 100100000, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
 --- !u!1 &1520231674
 GameObject:
@@ -899,6 +902,7 @@ MonoBehaviour:
   roomPrefab: {fileID: 7950231343569476328, guid: 579fbb4c049495942aa77ef0747bae8f, type: 3}
   roomWorldSize: 20
   playerTransform: {fileID: 1200497891}
+  securityGuardPrefab: {fileID: 3147816370311090463, guid: 87ca261aeb5e857428b14d91e83e66b2, type: 3}
   startRoomSpawnSide: 0
 --- !u!4 &1520231676
 Transform:
@@ -1091,6 +1095,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 0.5}
   m_EdgeRadius: 0
+--- !u!114 &2088222582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088222566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c74cea5fadba4d45853f3abdf02a635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  state: {fileID: 11400000, guid: fe0c9f169afcbe84da0d8ff8d45968cc, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
