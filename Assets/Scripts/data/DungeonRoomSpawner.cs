@@ -8,6 +8,8 @@ public class DungeonRoomSpawner : MonoBehaviour
     public float roomWorldSize = 20f;
     public Transform playerTransform;
 
+    public GameObject coinPrefab;
+    public int coinsPerTreasureRoom = 10;
     public GameObject securityGuardPrefab;
 
     [Header("Start room spawn")]
@@ -58,6 +60,18 @@ public class DungeonRoomSpawner : MonoBehaviour
                         guardAI.target = playerTransform;
                     guardAI.roomCoord = roomState.coord;
                     guardAI.dungeonState = dungeonState;
+                }
+            }
+            // Spawn coins in treasure rooms
+            if (coinPrefab != null && roomState.eventType == RoomEventType.Treasure)
+            {
+                for (int i = 0; i < coinsPerTreasureRoom; i++)
+                {
+                    // Random position within a circle around the room center
+                    Vector2 offset = Random.insideUnitCircle * (roomWorldSize * 0.3f);
+                    Vector3 coinPos = instance.transform.position + new Vector3(offset.x, offset.y, 0f);
+
+                    Instantiate(coinPrefab, coinPos, Quaternion.identity, instance.transform);
                 }
             }
         }

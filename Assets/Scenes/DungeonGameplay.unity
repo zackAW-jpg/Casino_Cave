@@ -902,6 +902,8 @@ MonoBehaviour:
   roomPrefab: {fileID: 7950231343569476328, guid: 579fbb4c049495942aa77ef0747bae8f, type: 3}
   roomWorldSize: 20
   playerTransform: {fileID: 1200497891}
+  coinPrefab: {fileID: 3558442363039286049, guid: bd95292f680305c4eae9005f9ca29e56, type: 3}
+  coinsPerTreasureRoom: 10
   securityGuardPrefab: {fileID: 3147816370311090463, guid: 87ca261aeb5e857428b14d91e83e66b2, type: 3}
   startRoomSpawnSide: 0
 --- !u!4 &1520231676
