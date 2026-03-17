@@ -26,15 +26,16 @@ public class CoinBullet : MonoBehaviour
         // Ignore hitting the player who fired us
         if (other.CompareTag("Player")) return;
 
-        // Apply knockback to any rigidbody we hit
+        // Apply knockback to any rigidbody we hit (enemies)
         Rigidbody2D hitRb = other.attachedRigidbody;
-        if (hitRb != null)
+        if (hitRb != null && hitRb.bodyType == RigidbodyType2D.Dynamic)
         {
             Vector2 dir = knockbackDirection.sqrMagnitude > 0.0001f
                 ? knockbackDirection.normalized
-                : (hitRb.position - (Vector2)transform.position).normalized;
+                : ((Vector2)hitRb.transform.position - (Vector2)transform.position).normalized;
 
             hitRb.AddForce(dir * knockbackForce, ForceMode2D.Impulse);
+            other.gameObject.SendMessage("OnKnockbackReceived", SendMessageOptions.DontRequireReceiver);
         }
 
         if (damage > 0)

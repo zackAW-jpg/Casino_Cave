@@ -136,6 +136,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHP: 5
   currentHP: 0
+  damagePopupPrefab: {fileID: 4499982856607948780, guid: 850a45f4381ebd549ba3784e3cdbd670, type: 3}
+  popupOffset: {x: 0, y: -0.5, z: 0}
 --- !u!114 &5957113139703372498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +154,10 @@ MonoBehaviour:
   attackRange: 1
   attackCooldown: 0.7
   attackDamage: 1
+  playerKnockbackForce: 4
   target: {fileID: 0}
+  roomCoord: {x: 0, y: 0}
+  dungeonState: {fileID: 0}
 --- !u!58 &8115428615837035052
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -52,9 +52,12 @@ public class DungeonRoomSpawner : MonoBehaviour
                 Vector3 guardPos = instance.transform.position; // center of the room
                 GameObject guard = Instantiate(securityGuardPrefab, guardPos, Quaternion.identity, instance.transform);
                 SecurityGuard guardAI = guard.GetComponent<SecurityGuard>();
-                if (guardAI != null && playerTransform != null)
+                if (guardAI != null)
                 {
-                    guardAI.target = playerTransform;
+                    if (playerTransform != null)
+                        guardAI.target = playerTransform;
+                    guardAI.roomCoord = roomState.coord;
+                    guardAI.dungeonState = dungeonState;
                 }
             }
         }

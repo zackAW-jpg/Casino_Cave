@@ -7,15 +7,15 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
-
+    private float _knockbackTimer;
     private PlayerControls controls;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
         controls = new PlayerControls();
     }
+
     void OnEnable()
     {
         controls.Enable();
@@ -26,6 +26,14 @@ public class PlayerMovement : MonoBehaviour
         controls.Disable();
     }
 
+    /// <summary>
+    /// Called by PlayerHealth via SendMessage when the player takes damage, so we don't overwrite velocity for a moment.
+    /// </summary>
+    public void OnKnockbackReceived()
+    {
+        _knockbackTimer = 0.2f;
+    }
+
     void Update()
     {
         moveInput = controls.Player.Move.ReadValue<Vector2>();
@@ -33,6 +41,15 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        if (_knockbackTimer > 0f)
+        {
+            _knockbackTimer -= Time.fixedDeltaTime;
+            return;
+        }
+
+        if (moveInput.sqrMagnitude > 0.01f)
+            rb.linearVelocity = moveInput.normalized * moveSpeed;
+        else
+            rb.linearVelocity = Vector2.zero;
     }
 }

@@ -151,7 +151,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -171,4 +171,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CoinBullet
   damage: 0
   isHeads: 0
+  knockbackDirection: {x: 0, y: 0}
+  knockbackForce: 5
   lifeTime: 5

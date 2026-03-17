@@ -23,6 +23,8 @@ public class PlayerHealth : MonoBehaviour
         state.currentHP -= amount;
         Debug.Log($"Player took {amount} damage, HP now {state.currentHP}");
 
+        gameObject.SendMessage("OnKnockbackReceived", SendMessageOptions.DontRequireReceiver);
+
         if (state.currentHP <= 0)
         {
             Die();
