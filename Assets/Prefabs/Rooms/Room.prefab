@@ -123,6 +123,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
   direction: 0
+  iconSprite: {fileID: -7341407202210888751, guid: bf8ed70e78ce37d4b90128fd50e57194, type: 3}
+  iconLocalHalfWidth: 0.35
+  iconLocalY: 0
+  iconSortingOrder: 5
+  iconColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1177007676647433973
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,6 +220,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
   direction: 1
+  iconSprite: {fileID: -7341407202210888751, guid: bf8ed70e78ce37d4b90128fd50e57194, type: 3}
+  iconLocalHalfWidth: 0.35
+  iconLocalY: 0
+  iconSortingOrder: 5
+  iconColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1570643713629697094
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +725,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
   direction: 2
+  iconSprite: {fileID: -7341407202210888751, guid: bf8ed70e78ce37d4b90128fd50e57194, type: 3}
+  iconLocalHalfWidth: 0.35
+  iconLocalY: 0
+  iconSortingOrder: 5
+  iconColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6726601185070398710
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,6 +822,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
   direction: 3
+  iconSprite: {fileID: -7341407202210888751, guid: bf8ed70e78ce37d4b90128fd50e57194, type: 3}
+  iconLocalHalfWidth: 0.35
+  iconLocalY: 0
+  iconSortingOrder: 5
+  iconColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6972322007261489984
 GameObject:
   m_ObjectHideFlags: 0

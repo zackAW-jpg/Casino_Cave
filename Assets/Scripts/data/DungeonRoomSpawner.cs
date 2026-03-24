@@ -1,11 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DungeonRoomSpawner : MonoBehaviour
 {
     public DungeonStateSO dungeonState;
     public GameObject roomPrefab;
-    public float roomWorldSize = 20f;
+
+    [Header("Layout (center-to-center between rooms)")]
+    [Tooltip("Vertical spacing between room centers.")]
+    [FormerlySerializedAs("roomWorldSize")]
+    public float roomSpacingY = 20f;
+
+    [Tooltip("Horizontal spacing between room centers. Leave 0 to use Auto Balance, or same as Y if Auto Balance is off.")]
+    public float roomSpacingX = 0f;
+
+    [Tooltip("When roomSpacingX is 0, compute X so the horizontal gap between room edges matches the vertical gap (good when the room art is wider than tall).")]
+    public bool autoBalanceHorizontalSpacing = true;
+
     public Transform playerTransform;
 
     public GameObject coinPrefab;
@@ -23,11 +35,14 @@ public class DungeonRoomSpawner : MonoBehaviour
     {
         _roomInstances.Clear();
 
+        float sx = ResolveRoomSpacingX();
+        float sy = roomSpacingY;
+
         foreach (RoomState roomState in dungeonState.rooms)
         {
             Vector3 worldPos = new Vector3(
-                roomState.coord.x * roomWorldSize,
-                roomState.coord.y * roomWorldSize,
+                roomState.coord.x * sx,
+                roomState.coord.y * sy,
                 0f
             );
 
@@ -68,7 +83,7 @@ public class DungeonRoomSpawner : MonoBehaviour
                 for (int i = 0; i < coinsPerTreasureRoom; i++)
                 {
                     // Random position within a circle around the room center
-                    Vector2 offset = Random.insideUnitCircle * (roomWorldSize * 0.3f);
+                    Vector2 offset = Random.insideUnitCircle * (Mathf.Min(sx, sy) * 0.3f);
                     Vector3 coinPos = instance.transform.position + new Vector3(offset.x, offset.y, 0f);
 
                     Instantiate(coinPrefab, coinPos, Quaternion.identity, instance.transform);
@@ -76,7 +91,65 @@ public class DungeonRoomSpawner : MonoBehaviour
             }
         }
 
-        Debug.Log($"DungeonRoomSpawner: Spawned {_roomInstances.Count} rooms.");
+        Debug.Log($"DungeonRoomSpawner: Spawned {_roomInstances.Count} rooms (spacing X={sx}, Y={sy}).");
+    }
+
+    /// <summary>Effective horizontal center spacing (after auto-balance or manual roomSpacingX).</summary>
+    public float GetEffectiveSpacingX() => ResolveRoomSpacingX();
+
+    /// <summary>Vertical center spacing.</summary>
+    public float GetEffectiveSpacingY() => roomSpacingY;
+
+    private float ResolveRoomSpacingX()
+    {
+        if (roomSpacingX > 0f)
+            return roomSpacingX;
+
+        if (!autoBalanceHorizontalSpacing || roomPrefab == null)
+            return roomSpacingY;
+
+        if (!TryGetRoomFootprint(roomPrefab, out float width, out float height))
+            return roomSpacingY;
+
+        if (height < 0.001f || width < 0.001f)
+            return roomSpacingY;
+
+        float gapY = roomSpacingY - height;
+        return width + Mathf.Max(0f, gapY);
+    }
+
+    /// <summary>
+    /// Axis-aligned footprint of all SpriteRenderers under the prefab (world-oriented while evaluating the prefab).
+    /// </summary>
+    private static bool TryGetRoomFootprint(GameObject prefab, out float width, out float height)
+    {
+        width = height = 0f;
+        SpriteRenderer[] renderers = prefab.GetComponentsInChildren<SpriteRenderer>(true);
+        if (renderers.Length == 0)
+            return false;
+
+        bool init = false;
+        Bounds enc = default;
+        foreach (SpriteRenderer sr in renderers)
+        {
+            if (!sr.enabled) continue;
+            Bounds b = sr.bounds;
+            if (b.size.sqrMagnitude < 1e-8f) continue;
+            if (!init)
+            {
+                enc = b;
+                init = true;
+            }
+            else
+                enc.Encapsulate(b);
+        }
+
+        if (!init)
+            return false;
+
+        width = enc.size.x;
+        height = enc.size.y;
+        return true;
     }
 
     private void PlacePlayerInStartRoom()
