@@ -1,2 +1,17 @@
 fileFormatVersion: 2
 guid: 20bdb53bfd394ab459f8c58cc6e12afc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - dungeonState: {instanceID: 0}
+  - roomPrefab: {instanceID: 0}
+  - playerTransform: {instanceID: 0}
+  - merchantSpawnTable: {instanceID: 0}
+  - coinPrefab: {instanceID: 0}
+  - securityGuardPrefab: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -5,8 +5,11 @@ public class PlayerHealth : MonoBehaviour
 {
     public PlayerStateSO state;
 
-    /// <summary>Fired after HP changes (damage, heal, etc.). Arguments: currentHP, maxHP.</summary>
     public event Action<int, int> OnHealthChanged;
+
+    [Header("Temporary HP")]
+    [Tooltip("Runtime-only temporary HP that is consumed before currentHP.")]
+    public int tempHP = 0;
 
     private void Awake()
     {
@@ -17,6 +20,7 @@ public class PlayerHealth : MonoBehaviour
         }
 
         state.currentHP = state.maxHP;
+        tempHP = 0;
         RaiseHealthChanged();
     }
 
@@ -25,8 +29,18 @@ public class PlayerHealth : MonoBehaviour
         if (state == null) return;
         if (amount <= 0) return;
 
-        state.currentHP -= amount;
-        Debug.Log($"Player took {amount} damage, HP now {state.currentHP}");
+        int dmgRemaining = amount;
+
+        if (tempHP > 0)
+        {
+            int usedFromTemp = Mathf.Min(tempHP, dmgRemaining);
+            tempHP -= usedFromTemp;
+            dmgRemaining -= usedFromTemp;
+        }
+
+        state.currentHP -= dmgRemaining;
+
+        Debug.Log($"Player took {amount} damage. currentHP={state.currentHP}, tempHP={tempHP}");
 
         RaiseHealthChanged();
 
@@ -38,7 +52,31 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    /// <summary>Call when healing or changing max HP at runtime.</summary>
+    public void HealWithTempOverflow(int amount)
+    {
+        if (state == null) return;
+        if (amount <= 0) return;
+
+        int healRemaining = amount;
+
+        int missing = state.maxHP - state.currentHP;
+        if (missing > 0)
+        {
+            int toCurrent = Mathf.Min(missing, healRemaining);
+            state.currentHP += toCurrent;
+            healRemaining -= toCurrent;
+        }
+
+        if (healRemaining > 0)
+        {
+            tempHP += healRemaining;
+        }
+
+        Debug.Log($"Player healed {amount}. currentHP={state.currentHP}, tempHP={tempHP}");
+
+        RaiseHealthChanged();
+    }
+
     public void RaiseHealthChanged()
     {
         if (state == null) return;

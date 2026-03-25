@@ -20,6 +20,10 @@ public class DungeonRoomSpawner : MonoBehaviour
 
     public Transform playerTransform;
 
+    [Header("Merchant NPCs")]
+    public MerchantSpawnTableSO merchantSpawnTable;
+    public float merchantSpawnRadius = 3f;
+
     public GameObject coinPrefab;
     public int coinsPerTreasureRoom = 10;
     public GameObject securityGuardPrefab;
@@ -87,6 +91,18 @@ public class DungeonRoomSpawner : MonoBehaviour
                     Vector3 coinPos = instance.transform.position + new Vector3(offset.x, offset.y, 0f);
 
                     Instantiate(coinPrefab, coinPos, Quaternion.identity, instance.transform);
+                }
+            }
+            // Spawn merchant NPC in merchant rooms
+            if (roomState.eventType == RoomEventType.Merchant && merchantSpawnTable != null)
+            {
+                GameObject merchantPrefab = merchantSpawnTable.PickPrefab();
+                if (merchantPrefab != null)
+                {
+                    Vector2 offset = Random.insideUnitCircle * merchantSpawnRadius;
+                    Vector3 pos = instance.transform.position + new Vector3(offset.x, offset.y, 0f);
+
+                    Instantiate(merchantPrefab, pos, Quaternion.identity, instance.transform);
                 }
             }
         }
