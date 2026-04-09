@@ -29,6 +29,14 @@ public class PlayerHealth : MonoBehaviour
         if (state == null) return;
         if (amount <= 0) return;
 
+        if (TryGetComponent(out PlayerDodge dodge))
+        {
+            if (dodge.IsInInvulnerableWindow)
+                return;
+            if (dodge.IsDodging)
+                dodge.CancelDodge();
+        }
+
         int dmgRemaining = amount;
 
         if (tempHP > 0)

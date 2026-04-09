@@ -177,9 +177,15 @@ public class BossController : MonoBehaviour
             if (c == null || c.isTrigger) continue;
             if (!c.CompareTag("Player")) continue;
 
+            PlayerDodge pd = c.GetComponentInParent<PlayerDodge>();
+            if (pd != null && pd.IsInInvulnerableWindow)
+                continue;
+
             PlayerHealth ph = c.GetComponentInParent<PlayerHealth>();
-            if (ph != null && damagedPlayers.Add(ph))
-                ph.TakeDamage(slamDamage);
+            if (ph == null || !damagedPlayers.Add(ph))
+                continue;
+
+            ph.TakeDamage(slamDamage);
 
             if (knockbackRb == null && c.attachedRigidbody != null)
                 knockbackRb = c.attachedRigidbody;

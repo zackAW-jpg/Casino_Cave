@@ -103,11 +103,15 @@ public class SecurityGuard : MonoBehaviour
         if (distance > attackRange + 0.1f) return;
 
         PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            playerHealth.TakeDamage(attackDamage);
-            ApplyKnockbackToPlayer();
-        }
+        if (playerHealth == null)
+            return;
+
+        PlayerDodge dodge = target.GetComponent<PlayerDodge>();
+        if (dodge != null && dodge.IsInInvulnerableWindow)
+            return;
+
+        playerHealth.TakeDamage(attackDamage);
+        ApplyKnockbackToPlayer();
     }
 
     private void ApplyKnockbackToPlayer()

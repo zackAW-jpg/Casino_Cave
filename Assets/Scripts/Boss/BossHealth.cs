@@ -60,7 +60,7 @@ public class BossHealth : MonoBehaviour
 
         for (int i = 0; i < coinsOnDeath; i++)
         {
-            Vector2 offset = Random.insideUnitCircle * coinSpawnRadius;
+            Vector2 offset = UnityEngine.Random.insideUnitCircle * coinSpawnRadius;
             Vector3 pos = origin + new Vector3(offset.x, offset.y, 0f);
             Instantiate(coinPrefab, pos, Quaternion.identity, parent);
         }

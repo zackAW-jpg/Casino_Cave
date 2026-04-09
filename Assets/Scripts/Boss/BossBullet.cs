@@ -22,6 +22,15 @@ public class BossBullet : MonoBehaviour
         if (other.GetComponentInParent<BossHealth>() != null) return;
         if (!other.CompareTag("Player")) return;
 
+        PlayerDodge dodge = other.GetComponentInParent<PlayerDodge>();
+        if (dodge != null && dodge.IsInInvulnerableWindow)
+        {
+            Collider2D bulletCol = GetComponent<Collider2D>();
+            if (bulletCol != null)
+                Physics2D.IgnoreCollision(bulletCol, other, true);
+            return;
+        }
+
         PlayerHealth ph = other.GetComponentInParent<PlayerHealth>();
         if (ph != null)
             ph.TakeDamage(damage);

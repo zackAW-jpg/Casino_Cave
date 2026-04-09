@@ -9,11 +9,18 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private float _knockbackTimer;
     private PlayerControls controls;
+    private PlayerDodge _dodge;
+
+    /// <summary>Last facing used for dodge when there is no movement input this frame.</summary>
+    public Vector2 LastNonZeroMoveDir { get; private set; } = Vector2.down;
+
+    public Vector2 CurrentMoveInput => moveInput;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         controls = new PlayerControls();
+        _dodge = GetComponent<PlayerDodge>();
     }
 
     void OnEnable()
@@ -37,10 +44,15 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         moveInput = controls.Player.Move.ReadValue<Vector2>();
+        if (moveInput.sqrMagnitude > 0.01f)
+            LastNonZeroMoveDir = moveInput.normalized;
     }
 
     void FixedUpdate()
     {
+        if (_dodge != null && _dodge.IsDodging)
+            return;
+
         if (_knockbackTimer > 0f)
         {
             _knockbackTimer -= Time.fixedDeltaTime;
