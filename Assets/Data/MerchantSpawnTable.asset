@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MerchantSpawnTable
   m_EditorClassIdentifier: Assembly-CSharp::MerchantSpawnTableSO
   entries:
-  - merchantPrefab: {fileID: 7835515028502634865, guid: b1f55de0611071a409be27b4e5e26740, type: 3}
+  - merchantPrefab: {fileID: 2624756441425909869, guid: 22cf0ac8baa06f64b90fa7e5e9cf97c1, type: 3}
     weight: 100

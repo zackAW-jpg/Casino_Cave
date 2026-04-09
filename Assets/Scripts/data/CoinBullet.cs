@@ -26,9 +26,11 @@ public class CoinBullet : MonoBehaviour
         // Ignore hitting the player who fired us
         if (other.CompareTag("Player")) return;
 
-        // Apply knockback to any rigidbody we hit (enemies)
+        BossHealth bossHealth = other.GetComponentInParent<BossHealth>();
+
+        // Apply knockback to rigidbodies except bosses (bosses are typically Kinematic anyway)
         Rigidbody2D hitRb = other.attachedRigidbody;
-        if (hitRb != null && hitRb.bodyType == RigidbodyType2D.Dynamic)
+        if (bossHealth == null && hitRb != null && hitRb.bodyType == RigidbodyType2D.Dynamic)
         {
             Vector2 dir = knockbackDirection.sqrMagnitude > 0.0001f
                 ? knockbackDirection.normalized
@@ -40,10 +42,13 @@ public class CoinBullet : MonoBehaviour
 
         if (damage > 0)
         {
-            var health = other.GetComponent<Health>();
-            if (health != null)
+            if (bossHealth != null)
+                bossHealth.TakeDamage(damage);
+            else
             {
-                health.TakeDamage(damage);
+                var health = other.GetComponent<Health>();
+                if (health != null)
+                    health.TakeDamage(damage);
             }
         }
 

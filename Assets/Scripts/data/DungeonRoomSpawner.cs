@@ -28,6 +28,14 @@ public class DungeonRoomSpawner : MonoBehaviour
     public int coinsPerTreasureRoom = 10;
     public GameObject securityGuardPrefab;
 
+    [Header("Boss")]
+    [Tooltip("Spawned in the room marked RoomEventType.Boss.")]
+    public GameObject bossPrefab;
+    public BossHUD bossHUD;
+    [Tooltip("Coins dropped around the boss when it dies (uses the same prefab as treasure rooms if coinPrefab is set).")]
+    public int bossCoinsOnDeath = 18;
+    public float bossCoinSpawnRadius = 2.5f;
+
     [Header("Start room spawn")]
     [Tooltip("Which spawn point in the start room (0,0) to place the player at.")]
     public DoorDirection startRoomSpawnSide = DoorDirection.North;
@@ -103,6 +111,38 @@ public class DungeonRoomSpawner : MonoBehaviour
                     Vector3 pos = instance.transform.position + new Vector3(offset.x, offset.y, 0f);
 
                     Instantiate(merchantPrefab, pos, Quaternion.identity, instance.transform);
+                }
+            }
+            if (roomState.eventType == RoomEventType.Boss)
+            {
+                if (bossPrefab == null)
+                {
+                    Debug.LogWarning(
+                        $"DungeonRoomSpawner: Boss room at {roomState.coord} but bossPrefab is not assigned.",
+                        this);
+                }
+                else
+                {
+                    Vector3 bossPos = instance.transform.position;
+                    GameObject boss = Instantiate(bossPrefab, bossPos, Quaternion.identity, instance.transform);
+                    BossHealth bh = boss.GetComponentInChildren<BossHealth>(true);
+                    BossController bc = boss.GetComponentInChildren<BossController>(true);
+                    if (bh == null)
+                        Debug.LogWarning("Boss prefab should include BossHealth (on root or child).", boss);
+                    if (bc == null)
+                        Debug.LogWarning("Boss prefab should include BossController.", boss);
+                    if (bc != null)
+                    {
+                        bc.dungeonState = dungeonState;
+                        bc.roomCoord = roomState.coord;
+                        bc.bossHUD = bossHUD;
+                    }
+                    if (bh != null && coinPrefab != null)
+                    {
+                        bh.coinPrefab = coinPrefab;
+                        bh.coinsOnDeath = bossCoinsOnDeath;
+                        bh.coinSpawnRadius = bossCoinSpawnRadius;
+                    }
                 }
             }
         }

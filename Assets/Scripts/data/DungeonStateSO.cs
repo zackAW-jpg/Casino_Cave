@@ -76,6 +76,11 @@ public class DungeonStateSO : ScriptableObject
         {
             bossRoom.eventType = RoomEventType.Boss;
         }
+        else
+        {
+            Debug.LogWarning(
+                "DungeonStateSO: Could not pick a boss room (e.g. only the start room exists). Increase totalRooms or adjust boss distance range.");
+        }
 
         // 6) Choose merchant rooms (avoid start and boss)
         AssignSpecialRooms(RoomEventType.Merchant, merchantCount);
