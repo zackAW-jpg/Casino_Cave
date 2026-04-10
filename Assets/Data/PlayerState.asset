@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: PlayerState
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStateSO
   maxHP: 10
-  currentHP: 10
+  currentHP: 9
   gold: 0
+  healthPotionCount: 3
+  healthPotionHealAmount: 4
   damage: 1

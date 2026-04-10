@@ -17,6 +17,7 @@ public class PlayerDodge : MonoBehaviour
 
     private Rigidbody2D _rb;
     private PlayerMovement _movement;
+    private PlayerHealChannel _healChannel;
     private float _dodgeStartTime;
     private float _cooldownUntil;
     private Vector2 _lockedDir;
@@ -29,6 +30,7 @@ public class PlayerDodge : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _movement = GetComponent<PlayerMovement>();
+        _healChannel = GetComponent<PlayerHealChannel>();
     }
 
     private void Update()
@@ -59,6 +61,8 @@ public class PlayerDodge : MonoBehaviour
     private void TryStartDodge()
     {
         if (_dodging)
+            return;
+        if (_healChannel != null && _healChannel.IsChannelingHeal)
             return;
         if (Time.time < _cooldownUntil)
             return;

@@ -13,6 +13,11 @@ public class PlayerStateSO : ScriptableObject
     [Header("Currency")]
     public int gold = 0;
 
+    [Header("Health potions")]
+    [Tooltip("Runtime stack size; initialized from PlayerHealth.startingHealthPotions at run start.")]
+    public int healthPotionCount;
+    public int healthPotionHealAmount = 4;
+
     [Header("Stats")]
     public int damage = 1;
 }

@@ -19,10 +19,12 @@ public class PlayerShooting : MonoBehaviour
     private int currentMultiplier = 1;
 
     private Camera _cam;
+    private PlayerHealChannel _healChannel;
 
     void Awake()
     {
         _cam = Camera.main;
+        _healChannel = GetComponent<PlayerHealChannel>();
 
         if (audioSource == null)
         {
@@ -41,6 +43,8 @@ public class PlayerShooting : MonoBehaviour
 
         if (shootPressed)
         {
+            if (_healChannel != null && _healChannel.IsChannelingHeal)
+                return;
             Shoot();
         }
     }

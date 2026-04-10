@@ -5,6 +5,10 @@ public class PlayerHealth : MonoBehaviour
 {
     public PlayerStateSO state;
 
+    [Header("Health potions")]
+    [Tooltip("How many potions at a new run (written to PlayerStateSO.healthPotionCount in Awake).")]
+    public int startingHealthPotions = 5;
+
     public event Action<int, int> OnHealthChanged;
 
     [Header("Temporary HP")]
@@ -21,6 +25,7 @@ public class PlayerHealth : MonoBehaviour
 
         state.currentHP = state.maxHP;
         tempHP = 0;
+        state.healthPotionCount = startingHealthPotions;
         RaiseHealthChanged();
     }
 
@@ -28,6 +33,9 @@ public class PlayerHealth : MonoBehaviour
     {
         if (state == null) return;
         if (amount <= 0) return;
+
+        if (TryGetComponent(out PlayerHealChannel healChannel))
+            healChannel.CancelFromDamage();
 
         if (TryGetComponent(out PlayerDodge dodge))
         {

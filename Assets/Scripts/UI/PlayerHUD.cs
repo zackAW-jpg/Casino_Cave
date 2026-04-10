@@ -25,6 +25,10 @@ public class PlayerHUD : MonoBehaviour
     [Header("Gold")]
     public TextMeshProUGUI goldText;
 
+    [Header("Health potions")]
+    [Tooltip("Flask icons ordered left → right. The leftmost is the bottom of the stack (filled first). Active count = healthPotionCount.")]
+    public GameObject[] potionIcons;
+
     [Header("Tuning")]
     [Tooltip("Seconds for HP fill to catch up to actual HP after a change.")]
     public float hpFillLerpDuration = 0.2f;
@@ -39,6 +43,7 @@ public class PlayerHUD : MonoBehaviour
     private Coroutine _hurtRoutine;
     private Coroutine _scaleRoutine;
     private int _lastGold;
+    private int _lastPotionCount = -1;
 
     private void OnEnable()
     {
@@ -75,6 +80,9 @@ public class PlayerHUD : MonoBehaviour
 
         RefreshGoldText();
 
+        _lastPotionCount = playerState.healthPotionCount;
+        RefreshPotionIcons();
+
         if (playerHealth == null)
             Debug.LogWarning("PlayerHUD: PlayerHealth not assigned — hurt flash only works if you assign it.", this);
     }
@@ -103,6 +111,12 @@ public class PlayerHUD : MonoBehaviour
         {
             _lastGold = playerState.gold;
             RefreshGoldText();
+        }
+
+        if (playerState.healthPotionCount != _lastPotionCount)
+        {
+            _lastPotionCount = playerState.healthPotionCount;
+            RefreshPotionIcons();
         }
     }
 
@@ -184,5 +198,18 @@ public class PlayerHUD : MonoBehaviour
     {
         if (goldText != null)
             goldText.text = $"Gold: {playerState.gold}";
+    }
+
+    private void RefreshPotionIcons()
+    {
+        if (potionIcons == null || potionIcons.Length == 0 || playerState == null)
+            return;
+
+        int n = playerState.healthPotionCount;
+        for (int i = 0; i < potionIcons.Length; i++)
+        {
+            if (potionIcons[i] != null)
+                potionIcons[i].SetActive(i < n);
+        }
     }
 }
