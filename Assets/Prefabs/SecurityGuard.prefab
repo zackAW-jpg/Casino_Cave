@@ -155,6 +155,11 @@ MonoBehaviour:
   attackCooldown: 0.7
   attackDamage: 1
   playerKnockbackForce: 4
+  dormantWhenPlayerOutsideRoom: 1
+  engageDelayAfterRoomEnter: 0.2
+  animator: {fileID: 0}
+  punchAttackTrigger: Punch
+  punchFlashIfNoAnimator: 1
   target: {fileID: 0}
   roomCoord: {x: 0, y: 0}
   dungeonState: {fileID: 0}

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -11,6 +12,20 @@ public class SecurityGuard : MonoBehaviour
     [Tooltip("Knockback force applied to the player when this guard hits them.")]
     public float playerKnockbackForce = 4f;
 
+    [Header("Room aggro")]
+    [Tooltip("When the player is not in this room, the guard stays dormant (no movement).")]
+    public bool dormantWhenPlayerOutsideRoom = true;
+    [Tooltip("After the player enters this room, guards wait this long before they can move or attack.")]
+    public float engageDelayAfterRoomEnter = 0.2f;
+
+    [Header("Attack animation")]
+    [Tooltip("Optional: assign an Animator Controller with a trigger named like Punch Attack.")]
+    public Animator animator;
+    [Tooltip("Animator trigger fired on each successful melee hit.")]
+    public string punchAttackTrigger = "Punch";
+    [Tooltip("Brief highlight if there is no Animator or no controller assigned.")]
+    public bool punchFlashIfNoAnimator = true;
+
     [Header("Set by DungeonRoomSpawner at runtime")]
     public Transform target;
     public Vector2Int roomCoord;
@@ -19,11 +34,16 @@ public class SecurityGuard : MonoBehaviour
     private Rigidbody2D _rb;
     private float _cooldownTimer;
     private float _knockbackTimer;
+    private float _roomEngageTimer;
+    private bool _wasPlayerInRoom;
+    private Coroutine _punchFlashCo;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _rb.bodyType = RigidbodyType2D.Dynamic;
+        if (animator == null)
+            animator = GetComponent<Animator>();
     }
 
     /// <summary>
@@ -38,27 +58,46 @@ public class SecurityGuard : MonoBehaviour
     {
         if (target == null) return;
 
-        // Let knockback velocity show; don't overwrite it until timer expires
         if (_knockbackTimer > 0f)
         {
             _knockbackTimer -= Time.deltaTime;
             return;
         }
 
-        // Only chase/attack when the player is in this room
-        if (dungeonState != null && dungeonState.currentRoomCoord != roomCoord)
+        bool playerInRoom = dungeonState == null || dungeonState.currentRoomCoord == roomCoord;
+
+        if (dormantWhenPlayerOutsideRoom && !playerInRoom)
         {
-            ReturnToRoomCenter();
+            _wasPlayerInRoom = false;
+            _roomEngageTimer = engageDelayAfterRoomEnter;
+            HoldDormant();
+            return;
+        }
+
+        if (!_wasPlayerInRoom)
+        {
+            _wasPlayerInRoom = true;
+            _roomEngageTimer = engageDelayAfterRoomEnter;
+        }
+
+        if (_roomEngageTimer > 0f)
+        {
+            _roomEngageTimer -= Time.deltaTime;
+            HoldDormant();
             return;
         }
 
         Vector2 toTarget = target.position - transform.position;
         float distance = toTarget.magnitude;
 
+        float speedMul = 1f;
+        if (TryGetComponent(out StatusEffectHost status))
+            speedMul = status.MoveSpeedMultiplier;
+
         if (distance > attackRange)
         {
             Vector2 dir = toTarget.normalized;
-            _rb.linearVelocity = dir * moveSpeed;
+            _rb.linearVelocity = dir * (moveSpeed * speedMul);
         }
         else
         {
@@ -73,26 +112,9 @@ public class SecurityGuard : MonoBehaviour
         }
     }
 
-    private void ReturnToRoomCenter()
+    private void HoldDormant()
     {
-        if (transform.parent == null)
-        {
-            _rb.linearVelocity = Vector2.zero;
-            return;
-        }
-
-        Vector2 center = transform.parent.position;
-        Vector2 toCenter = center - (Vector2)transform.position;
-        float distSq = toCenter.sqrMagnitude;
-
-        if (distSq < 0.01f)
-        {
-            _rb.linearVelocity = Vector2.zero;
-        }
-        else
-        {
-            _rb.linearVelocity = toCenter.normalized * moveSpeed;
-        }
+        _rb.linearVelocity = Vector2.zero;
     }
 
     private void TryAttackPlayer()
@@ -111,7 +133,41 @@ public class SecurityGuard : MonoBehaviour
             return;
 
         playerHealth.TakeDamage(attackDamage);
+        PlayPunchAttackAnimation();
         ApplyKnockbackToPlayer();
+    }
+
+    private void PlayPunchAttackAnimation()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null && !string.IsNullOrEmpty(punchAttackTrigger))
+            animator.SetTrigger(punchAttackTrigger);
+        else if (punchFlashIfNoAnimator && TryGetComponent(out SpriteRenderer sr))
+        {
+            if (_punchFlashCo != null)
+                StopCoroutine(_punchFlashCo);
+            _punchFlashCo = StartCoroutine(PunchFlashRoutine(sr));
+        }
+    }
+
+    private IEnumerator PunchFlashRoutine(SpriteRenderer sr)
+    {
+        Color baseCol = sr.color;
+        Color flash = baseCol;
+        flash.r = Mathf.Min(1f, baseCol.r + 0.35f);
+        flash.g = Mathf.Min(1f, baseCol.g + 0.35f);
+        flash.b = Mathf.Min(1f, baseCol.b + 0.35f);
+        const float dur = 0.1f;
+        float e = 0f;
+        while (e < dur)
+        {
+            e += Time.deltaTime;
+            float t = Mathf.Sin((e / dur) * Mathf.PI);
+            sr.color = Color.Lerp(baseCol, flash, t);
+            yield return null;
+        }
+
+        sr.color = baseCol;
+        _punchFlashCo = null;
     }
 
     private void ApplyKnockbackToPlayer()

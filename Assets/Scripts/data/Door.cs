@@ -4,6 +4,12 @@ using UnityEngine;
 /// Trigger transition to the adjacent room. Optionally spawns two sprites at the door jambs
 /// (both sides of the opening) when <see cref="iconSprite"/> is set.
 /// </summary>
+/// <remarks>
+/// <b>Tighter door hitbox:</b> each door object uses a <see cref="UnityEngine.BoxCollider2D"/> on the same
+/// GameObject as this script. Open <c>Assets/Prefabs/Rooms/Room.prefab</c>, expand <c>Doors</c>, select
+/// <c>Door_N</c> / <c>Door_E</c> / etc., and reduce <b>Size</b> (and use <b>Offset</b> to keep the box
+/// centered on the opening). This script does not resize the collider.
+/// </remarks>
 [RequireComponent(typeof(Collider2D))]
 public class Door : MonoBehaviour
 {
@@ -72,9 +78,24 @@ public class Door : MonoBehaviour
         sr.sortingOrder = iconSortingOrder;
     }
 
+    [Tooltip("Ignore door transitions briefly after the player takes damage (avoids knockback pushing into triggers).")]
+    public float ignoreAfterDamageSeconds = 0.45f;
+
+    [Tooltip("After a successful room transition, block further door triggers for this long so the player can leave the doorway.")]
+    public float doorCooldownAfterTransitionSeconds = 1f;
+
+    private static float s_lastSuccessfulDoorTransitionTime = -1000f;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player"))
+            return;
+
+        PlayerHealth health = other.GetComponentInParent<PlayerHealth>();
+        if (health != null && health.IsRecentlyDamaged(ignoreAfterDamageSeconds))
+            return;
+
+        if (Time.time - s_lastSuccessfulDoorTransitionTime < doorCooldownAfterTransitionSeconds)
             return;
 
         if (roomController == null)
@@ -83,6 +104,7 @@ public class Door : MonoBehaviour
             return;
         }
 
-        roomController.TryMoveToAdjacentRoom(direction);
+        if (roomController.TryMoveToAdjacentRoom(direction))
+            s_lastSuccessfulDoorTransitionTime = Time.time;
     }
 }

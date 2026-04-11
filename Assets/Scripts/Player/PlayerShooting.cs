@@ -20,11 +20,13 @@ public class PlayerShooting : MonoBehaviour
 
     private Camera _cam;
     private PlayerHealChannel _healChannel;
+    private GamblingArmController _gamblingArm;
 
     void Awake()
     {
         _cam = Camera.main;
         _healChannel = GetComponent<PlayerHealChannel>();
+        _gamblingArm = GetComponent<GamblingArmController>();
 
         if (audioSource == null)
         {
@@ -44,6 +46,8 @@ public class PlayerShooting : MonoBehaviour
         if (shootPressed)
         {
             if (_healChannel != null && _healChannel.IsChannelingHeal)
+                return;
+            if (_gamblingArm != null && _gamblingArm.enabled && _gamblingArm.BlocksCoinGun)
                 return;
             Shoot();
         }

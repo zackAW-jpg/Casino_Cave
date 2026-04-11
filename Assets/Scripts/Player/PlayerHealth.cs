@@ -11,6 +11,9 @@ public class PlayerHealth : MonoBehaviour
 
     public event Action<int, int> OnHealthChanged;
 
+    /// <summary>Time.time when damage was last applied (after temp HP). Used to avoid accidental door transitions during knockback.</summary>
+    public float LastDamageTime { get; private set; } = -1000f;
+
     [Header("Temporary HP")]
     [Tooltip("Runtime-only temporary HP that is consumed before currentHP.")]
     public int tempHP = 0;
@@ -56,6 +59,8 @@ public class PlayerHealth : MonoBehaviour
 
         state.currentHP -= dmgRemaining;
 
+        LastDamageTime = Time.time;
+
         Debug.Log($"Player took {amount} damage. currentHP={state.currentHP}, tempHP={tempHP}");
 
         RaiseHealthChanged();
@@ -97,6 +102,12 @@ public class PlayerHealth : MonoBehaviour
     {
         if (state == null) return;
         OnHealthChanged?.Invoke(state.currentHP, state.maxHP);
+    }
+
+    /// <summary>Door / transitions can use this to ignore triggers right after hits + knockback.</summary>
+    public bool IsRecentlyDamaged(float windowSeconds)
+    {
+        return Time.time - LastDamageTime < windowSeconds;
     }
 
     private void Die()

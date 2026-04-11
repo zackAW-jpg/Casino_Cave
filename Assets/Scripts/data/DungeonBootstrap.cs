@@ -25,9 +25,5 @@ public class DungeonBootstrap : MonoBehaviour
         {
             spawner.BuildDungeonAndPlacePlayer();
         }
-
-        DungeonDebugView debugView = FindObjectOfType<DungeonDebugView>();
-        if (debugView != null)
-            debugView.DrawDungeon();
     }
 }

@@ -19,6 +19,8 @@ public class BossController : MonoBehaviour
     [Tooltip("Same asset as on the spawner; used like SecurityGuard to know when the player is in this room.")]
     public DungeonStateSO dungeonState;
     public Vector2Int roomCoord;
+    [Tooltip("After the player enters the boss room, wait this long before movement and attacks.")]
+    public float roomEngageDelaySeconds = 0.2f;
     [Tooltip("HUD binds when the player enters this boss room; unbinds when they leave or the boss dies.")]
     public BossHUD bossHUD;
 
@@ -49,6 +51,8 @@ public class BossController : MonoBehaviour
     private float _nextSlamTime;
     private bool _slamming;
     private bool _hudBound;
+    private float _roomEngageTimer;
+    private bool _wasPlayerInBossRoom;
 
     private void Awake()
     {
@@ -102,21 +106,46 @@ public class BossController : MonoBehaviour
         if (!IsPlayerInBossRoom() || playerTransform == null || bossHealth == null || _slamming)
             return;
 
+        if (_roomEngageTimer > 0f)
+            return;
+
         Vector2 toPlayer = (Vector2)playerTransform.position - _rb.position;
         float d = toPlayer.magnitude;
         if (d <= stopDistanceFromPlayer || d < 0.001f)
             return;
 
         Vector2 dir = toPlayer / d;
-        _rb.MovePosition(_rb.position + dir * (moveSpeed * Time.fixedDeltaTime));
+        float spd = moveSpeed;
+        if (TryGetComponent(out StatusEffectHost status))
+            spd *= status.MoveSpeedMultiplier;
+        _rb.MovePosition(_rb.position + dir * (spd * Time.fixedDeltaTime));
     }
 
     private void Update()
     {
         UpdateBossHudBinding();
 
-        if (!IsPlayerInBossRoom() || playerTransform == null || bossHealth == null || _slamming)
+        if (!IsPlayerInBossRoom())
+        {
+            _wasPlayerInBossRoom = false;
+            _roomEngageTimer = roomEngageDelaySeconds;
             return;
+        }
+
+        if (!_wasPlayerInBossRoom)
+        {
+            _wasPlayerInBossRoom = true;
+            _roomEngageTimer = roomEngageDelaySeconds;
+        }
+
+        if (playerTransform == null || bossHealth == null || _slamming)
+            return;
+
+        if (_roomEngageTimer > 0f)
+        {
+            _roomEngageTimer -= Time.deltaTime;
+            return;
+        }
 
         float dist = Vector2.Distance(transform.position, playerTransform.position);
 

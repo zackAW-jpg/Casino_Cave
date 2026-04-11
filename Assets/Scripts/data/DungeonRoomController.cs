@@ -41,18 +41,19 @@ public class DungeonRoomController : MonoBehaviour
         }
     }
 
-    public void TryMoveToAdjacentRoom(DoorDirection direction)
+    /// <returns>True if the player was moved to a new room.</returns>
+    public bool TryMoveToAdjacentRoom(DoorDirection direction)
     {
         if (dungeonState == null)
         {
             Debug.LogError("DungeonRoomController has no DungeonStateSO assigned.", this);
-            return;
+            return false;
         }
 
         if (spawner == null)
         {
             Debug.LogError("DungeonRoomController has no spawner assigned. Use DungeonRoomSpawner to build the dungeon.", this);
-            return;
+            return false;
         }
 
         Vector2Int delta = GetDeltaForDirection(direction);
@@ -61,18 +62,19 @@ public class DungeonRoomController : MonoBehaviour
         if (!dungeonState.TryGetRoom(targetCoord, out _))
         {
             Debug.LogWarning($"No room exists at {targetCoord} for direction {direction}.", this);
-            return;
+            return false;
         }
 
         DungeonRoomController targetRoom = spawner.GetRoomAt(targetCoord);
         if (targetRoom == null)
         {
             Debug.LogWarning($"No room instance at {targetCoord}.", this);
-            return;
+            return false;
         }
 
         dungeonState.currentRoomCoord = targetCoord;
         MovePlayerToSpawnInNewRoom(direction, targetRoom);
+        return true;
     }
 
     private static Vector2Int GetDeltaForDirection(DoorDirection direction)
