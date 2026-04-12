@@ -189,6 +189,8 @@ public class DungeonRoomSpawner : MonoBehaviour
         foreach (SpriteRenderer sr in renderers)
         {
             if (!sr.enabled) continue;
+            if (sr.GetComponentInParent<RoomFootprintIgnore>() != null)
+                continue;
             Bounds b = sr.bounds;
             if (b.size.sqrMagnitude < 1e-8f) continue;
             if (!init)
