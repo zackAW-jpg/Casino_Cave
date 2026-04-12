@@ -114,6 +114,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossHealth
   maxHP: 40
   currentHP: 0
+  displayName: The Burnt One
+  coinPrefab: {fileID: 0}
+  coinsOnDeath: 15
+  coinSpawnRadius: 2.5
 --- !u!114 &7915146739228853302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +132,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossController
   playerTransform: {fileID: 0}
   bossHealth: {fileID: 5688667618479479158}
+  dungeonState: {fileID: 0}
+  roomCoord: {x: 0, y: 0}
+  roomEngageDelaySeconds: 0.2
+  bossHUD: {fileID: 0}
+  moveSpeed: 1.6
+  stopDistanceFromPlayer: 1.2
   bossBulletPrefab: {fileID: 3401750203084898283, guid: 9b0b0e5ebe9051d4ea8536cc448bd926, type: 3}
   firePoint: {fileID: 0}
   shootInterval: 2.8
@@ -135,8 +145,8 @@ MonoBehaviour:
   slamProximity: 4
   slamWindup: 1.1
   slamCooldown: 4.5
-  shockwaveRadius: 5
-  slamDamage: 5
+  shockwaveRadius: 2.3
+  slamDamage: 3
   slamKnockbackForce: 10
   slamHitMask:
     serializedVersion: 2

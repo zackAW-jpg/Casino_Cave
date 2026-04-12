@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 /// <summary>
-/// Slot roll (1s) → ready → left-click attack → (after attack duration) roll again.
-/// Debug: On-screen labels + Console. Wire prefabs for shuriken, glove, gold coin; hammer/punch use overlaps.
+/// Slot roll → ready → left-click attack → (after attack duration) roll again.
+/// Optional bottom-left <see cref="GamblingArmSlotHud"/> during Rolling; wire projectiles/VFX on this object.
 /// </summary>
 public class GamblingArmController : MonoBehaviour
 {
@@ -68,6 +69,11 @@ public class GamblingArmController : MonoBehaviour
     [Header("Layers")]
     public LayerMask hitLayers = ~0;
 
+    [Header("Roll UI")]
+    [Tooltip("Optional: bottom-left slot Images — random spin then lock during Rolling. If null, only waits roll duration.")]
+    [FormerlySerializedAs("rollDisplay")]
+    public GamblingArmSlotHud slotHud;
+
     public Phase CurrentPhase { get; private set; } = Phase.Rolling;
 
     private GamblingArmRollResult _roll;
@@ -116,23 +122,29 @@ public class GamblingArmController : MonoBehaviour
     private IEnumerator RollRoutine()
     {
         CurrentPhase = Phase.Rolling;
-        float t = 0f;
-        while (t < rollDurationSeconds)
+        _roll = GamblingArmRollResult.RollNew();
+
+        if (slotHud != null)
+            yield return StartCoroutine(slotHud.PlayRollAnimation(_roll, rollDurationSeconds));
+        else
         {
-            t += Time.deltaTime;
-            yield return null;
+            float t = 0f;
+            while (t < rollDurationSeconds)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
         }
 
-        _roll = GamblingArmRollResult.RollNew();
         CurrentPhase = Phase.Ready;
         LogRollDebug();
     }
 
     private void LogRollDebug()
     {
-        string crit = _roll.IsCrit ? "CRIT!" : $"crit sym={_roll.CritSymbol} (no match)";
-        Debug.Log(
-            $"[GamblingArm] READY | Attack={_roll.Attack} | Mod={_roll.Modifier} | {crit}");
+#if UNITY_EDITOR
+        Debug.Log($"[GamblingArm] Ready (dev: {_roll.Attack}, {_roll.Modifier}, R={_roll.CritSymbol}, crit={_roll.IsCrit})");
+#endif
     }
 
     private IEnumerator AttackThenRollRoutine()
@@ -403,24 +415,25 @@ public class GamblingArmController : MonoBehaviour
 
     private void OnGUI()
     {
+        if (slotHud != null)
+            return;
+
         const float w = 420f;
-        var rect = new Rect((Screen.width - w) * 0.5f, 8f, w, 120f);
+        var rect = new Rect((Screen.width - w) * 0.5f, 8f, w, 72f);
         string line1 = "";
         string line2 = "";
 
         switch (CurrentPhase)
         {
             case Phase.Rolling:
-                line1 = "[Gambling Arm] Rolling slots…";
+                line1 = "…";
                 break;
             case Phase.Ready:
-                line1 = $"Slots: {_roll.Attack}  |  {_roll.Modifier}  |  {_roll.CritSymbol}";
-                line2 = _roll.IsCrit
-                    ? "CRIT (left matched right!)"
-                    : "No crit (right ≠ left)";
+                line1 = "Ready";
+                line2 = "Click";
                 break;
             case Phase.Attacking:
-                line1 = $"Attacking: {_roll.Attack}…";
+                line1 = "…";
                 break;
         }
 
@@ -428,8 +441,6 @@ public class GamblingArmController : MonoBehaviour
         GUI.Label(new Rect(rect.x + 6f, rect.y + 4f, rect.width - 12f, 22f), line1, GetLabelStyle());
         if (!string.IsNullOrEmpty(line2))
             GUI.Label(new Rect(rect.x + 6f, rect.y + 28f, rect.width - 12f, 44f), line2, GetLabelStyle());
-        GUI.Label(new Rect(rect.x + 6f, rect.y + 52f, rect.width - 12f, 60f),
-            "Left click to use attack when READY. Next roll starts after attack duration.", GetLabelStyle());
     }
 
     private static GUIStyle _labelStyle;
