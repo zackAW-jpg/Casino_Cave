@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4931216623003028929}
   - component: {fileID: 8154771705455095417}
+  - component: {fileID: 5829471038475619284}
   - component: {fileID: 3875145236449820083}
   m_Layer: 0
   m_Name: NPC
@@ -68,7 +69,21 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 2
+--- !u!114 &5829471038475619284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114185195986922904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e2d3c4b5a6978890a1b2c3d4e5f678, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NpcDialogueSpriteLayers
+  poseLayers: []
+  showFirstLayerWhenDialogueEnds: 1
 --- !u!114 &3875145236449820083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,10 +93,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2114185195986922904}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dafe5865b7fdcb7468cfd20379c387ff, type: 3}
+  m_Script: {fileID: 11500000, guid: a7f3e2d1c4b5a6978890abcedf123456, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NpcDialogueTrigger
-  dialogueText: Hello, traveler!
-  onDialogueTriggered:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: Assembly-CSharp::NpcMultiLineDialogueTrigger
+  speechBubble: {fileID: 0}
+  dialogueLines:
+  - Hello, traveler!
+  - The dungeon ahead is dangerous — watch your step.
+  - This is the third line.
+  - Press E when you are ready to move on.
+  slotUnlockAtLineStartIndex: 2
+  spriteLayers: {fileID: 5829471038475619284}
+  advanceKey: 19
+  advanceWithLeftClick: 0
+  advanceLineSound: {fileID: 0}
+  audioSource: {fileID: 0}
+  disableAutoHideOnSpeechBubble: 1

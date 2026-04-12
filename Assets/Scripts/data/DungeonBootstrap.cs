@@ -12,6 +12,8 @@ public class DungeonBootstrap : MonoBehaviour
 
     void Start()
     {
+        GamblingArmRuntimeState.ResetForNewRun();
+
         if (dungeonState == null)
         {
             Debug.LogError("DungeonBootstrap: dungeonState is not assigned.");

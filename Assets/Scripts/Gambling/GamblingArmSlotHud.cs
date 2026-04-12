@@ -45,6 +45,24 @@ public class GamblingArmSlotHud : MonoBehaviour
     private void Awake()
     {
         FixSiblingDrawOrder();
+        DisableRaycastTargetsOnReels();
+    }
+
+    /// <summary>
+    /// Reels do not need hit-testing; blocking raycasts can steal keyboard/mouse from gameplay dialogue.
+    /// </summary>
+    private void DisableRaycastTargetsOnReels()
+    {
+        if (reelLeft != null) reelLeft.raycastTarget = false;
+        if (reelMiddle != null) reelMiddle.raycastTarget = false;
+        if (reelRight != null) reelRight.raycastTarget = false;
+
+        if (slotMachineBackground != null)
+        {
+            var bg = slotMachineBackground.GetComponent<Image>();
+            if (bg != null)
+                bg.raycastTarget = false;
+        }
     }
 
     /// <summary>

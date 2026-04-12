@@ -78,6 +78,7 @@ public class GamblingArmController : MonoBehaviour
 
     private GamblingArmRollResult _roll;
     private Coroutine _phaseRoutine;
+    private Coroutine _deferredUnlockRoutine;
     private bool _critShakePlayedThisAttack;
 
     private Camera _cam;
@@ -93,13 +94,74 @@ public class GamblingArmController : MonoBehaviour
             _firePoint = shooting.firePoint;
     }
 
+    private void OnEnable()
+    {
+        GamblingArmRuntimeState.SlotsUnlockedChanged += OnSlotsUnlockedChanged;
+    }
+
+    private void OnDisable()
+    {
+        GamblingArmRuntimeState.SlotsUnlockedChanged -= OnSlotsUnlockedChanged;
+        if (_deferredUnlockRoutine != null)
+        {
+            StopCoroutine(_deferredUnlockRoutine);
+            _deferredUnlockRoutine = null;
+        }
+    }
+
     private void Start()
     {
+        ApplySlotHudActive();
+        if (GamblingArmRuntimeState.SlotsUnlocked)
+            BeginRollCycle();
+    }
+
+    private void OnSlotsUnlockedChanged()
+    {
+        if (_deferredUnlockRoutine != null)
+        {
+            StopCoroutine(_deferredUnlockRoutine);
+            _deferredUnlockRoutine = null;
+        }
+
+        if (GamblingArmRuntimeState.SlotsUnlocked)
+        {
+            // Wait one frame so NPC dialogue can finish the same E-press without UI stealing input.
+            _deferredUnlockRoutine = StartCoroutine(DeferredShowHudAndRoll());
+        }
+        else
+        {
+            ApplySlotHudActive();
+            if (_phaseRoutine != null)
+            {
+                StopCoroutine(_phaseRoutine);
+                _phaseRoutine = null;
+            }
+        }
+    }
+
+    private IEnumerator DeferredShowHudAndRoll()
+    {
+        yield return null;
+        _deferredUnlockRoutine = null;
+        if (!GamblingArmRuntimeState.SlotsUnlocked)
+            yield break;
+
+        ApplySlotHudActive();
         BeginRollCycle();
+    }
+
+    private void ApplySlotHudActive()
+    {
+        if (slotHud != null)
+            slotHud.gameObject.SetActive(GamblingArmRuntimeState.SlotsUnlocked);
     }
 
     private void Update()
     {
+        if (!GamblingArmRuntimeState.SlotsUnlocked)
+            return;
+
         if (Mouse.current == null)
             return;
         if (CurrentPhase != Phase.Ready)
@@ -410,11 +472,14 @@ public class GamblingArmController : MonoBehaviour
         return new Vector2(c * v.x - s * v.y, s * v.x + c * v.y);
     }
 
-    /// <summary>When present, coin gun is disabled — gambling arm owns primary fire.</summary>
-    public bool BlocksCoinGun => enabled;
+    /// <summary>When present, coin gun is disabled — gambling arm owns primary fire (only after slots unlock).</summary>
+    public bool BlocksCoinGun => enabled && GamblingArmRuntimeState.SlotsUnlocked;
 
     private void OnGUI()
     {
+        if (!GamblingArmRuntimeState.SlotsUnlocked)
+            return;
+
         if (slotHud != null)
             return;
 

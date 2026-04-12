@@ -19,6 +19,12 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
     [Header("Timing")]
     public float postChoiceHideSeconds = 0.8f;
 
+    [Header("Audio (optional)")]
+    [Tooltip("Played when advancing between dialogue lines (not when opening the Yes/No prompt).")]
+    public AudioClip advanceLineSound;
+    [Tooltip("If set, uses PlayOneShot; otherwise plays at this NPC's position.")]
+    public AudioSource audioSource;
+
     private Collider2D _col;
     private Coroutine _routine;
 
@@ -110,6 +116,19 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
         return Keyboard.current[noKey].wasPressedThisFrame;
     }
 
+    private void PlayAdvanceLineSound()
+    {
+        if (advanceLineSound == null) return;
+
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(advanceLineSound);
+            return;
+        }
+
+        AudioSource.PlayClipAtPoint(advanceLineSound, transform.position, 1f);
+    }
+
     private IEnumerator RunDialogue()
     {
         if (_handler == null)
@@ -130,6 +149,11 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
             // Wait for "next dialogue box"
             while (IsInRange() && !WasAdvancePressed())
                 yield return null;
+
+            if (!IsInRange()) yield break;
+
+            if (advanceLineSound != null && i < lines.Length - 1)
+                PlayAdvanceLineSound();
         }
 
         // Deal decision

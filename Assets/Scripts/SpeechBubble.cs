@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,9 +46,20 @@ public class SpeechBubble : MonoBehaviour
     {
         if (go == null) return;
         var uitext = go.GetComponent<Text>();
-        if (uitext != null) { uitext.text = text; return; }
+        if (uitext != null)
+        {
+            uitext.text = text;
+            return;
+        }
+
         var tmp = go.GetComponent("TMPro.TMP_Text");
-        if (tmp != null) tmp.GetType().GetProperty("text")?.SetValue(tmp, text);
+        if (tmp == null) return;
+
+        var type = tmp.GetType();
+        type.GetProperty("text")?.SetValue(tmp, text);
+        // Ensure layout/mesh refresh when advancing dialogue (TMP can skip redraw if only text changes in edge cases).
+        type.GetMethod("SetAllDirty", BindingFlags.Instance | BindingFlags.Public)?.Invoke(tmp, null);
+        type.GetMethod("ForceMeshUpdate", Type.EmptyTypes)?.Invoke(tmp, null);
     }
 
     public void Show(string text)
