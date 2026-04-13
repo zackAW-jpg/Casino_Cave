@@ -18,6 +18,10 @@ public class GamblingProjectile : MonoBehaviour
 
     public float lifeTime = 4f;
 
+    [Header("Walls")]
+    [Tooltip("Spawned at wall contact when this projectile is destroyed by a RoomWall.")]
+    public GameObject wallBreakVfxPrefab;
+
     public void Initialize(
         int damage,
         bool isCrit,
@@ -70,6 +74,13 @@ public class GamblingProjectile : MonoBehaviour
     {
         if (other.isTrigger) return;
         if (other.CompareTag("Player")) return;
+
+        if (ProjectileWallBreak.IsRoomWall(other))
+        {
+            ProjectileWallBreak.SpawnBreakVfx(ProjectileWallBreak.ContactPoint(other, transform.position), wallBreakVfxPrefab);
+            Destroy(gameObject);
+            return;
+        }
 
         BossHealth boss = other.GetComponentInParent<BossHealth>();
         Health health = other.GetComponentInParent<Health>();

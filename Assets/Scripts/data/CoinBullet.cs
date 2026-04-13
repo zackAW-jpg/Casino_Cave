@@ -9,6 +9,10 @@ public class CoinBullet : MonoBehaviour
     [HideInInspector] public Vector2 knockbackDirection;
     public float knockbackForce = 5f;
 
+    [Header("Walls")]
+    [Tooltip("Spawned at wall contact when this projectile is destroyed by a RoomWall.")]
+    public GameObject wallBreakVfxPrefab;
+
     public float lifeTime = 5f;
 
     private void Awake()
@@ -25,6 +29,13 @@ public class CoinBullet : MonoBehaviour
 
         // Ignore hitting the player who fired us
         if (other.CompareTag("Player")) return;
+
+        if (ProjectileWallBreak.IsRoomWall(other))
+        {
+            ProjectileWallBreak.SpawnBreakVfx(ProjectileWallBreak.ContactPoint(other, transform.position), wallBreakVfxPrefab);
+            Destroy(gameObject);
+            return;
+        }
 
         BossHealth bossHealth = other.GetComponentInParent<BossHealth>();
 

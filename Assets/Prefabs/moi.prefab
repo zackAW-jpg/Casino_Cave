@@ -16,9 +16,17 @@ GameObject:
   - component: {fileID: 2453087576480754638}
   - component: {fileID: -7149175045919055355}
   - component: {fileID: -3193229470971954873}
+  - component: {fileID: 5511223344556677889}
+  - component: {fileID: 6870349723541371374}
+  - component: {fileID: 358752853953956181}
+  - component: {fileID: 8846224400970428678}
+  - component: {fileID: 9171742491401728622}
+  - component: {fileID: 8822334455667788999}
+  - component: {fileID: 7571927485519907787}
+  - component: {fileID: 2018902493188459698}
   m_Layer: 0
   m_Name: moi
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,9 +41,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.01, y: 0.01, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 6166107476431683464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6466516178711173787
@@ -87,8 +96,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 3625043607559282579, guid: 19fb86013d8c24d6cb8410c0aadf30fa, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 6062356442871008145, guid: 7f33704214e2cc44d86ba606924863c8, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -199,11 +208,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d596e0c58d51c584ea0969756ac7b3bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShooting
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 6166107476431683464}
   bulletPrefab: {fileID: 383053531295942131, guid: 536d0b1965756a94c8a297faeda7e542, type: 3}
   bulletSpeed: 15
   audioSource: {fileID: 0}
   gunshotClip: {fileID: 8300000, guid: b0f3301619e9eba49839e4fd8d1390b8, type: 3}
+  baseDamage: 1
 --- !u!82 &-3193229470971954873
 AudioSource:
   m_ObjectHideFlags: 0
@@ -217,7 +227,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.108
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -301,3 +311,227 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5511223344556677889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFacingSprite2D
+  movement: {fileID: 5771258894256756194}
+  spriteUp: {fileID: 4739765660085352418, guid: 8378870745a27a446bf736dbaf55bfba, type: 3}
+  spriteDown: {fileID: 6062356442871008145, guid: 7f33704214e2cc44d86ba606924863c8, type: 3}
+  spriteLeft: {fileID: 1979120821560759445, guid: 4fc5091e764b2294a96bc83fe02df004, type: 3}
+  spriteRight: {fileID: -3986241459965489653, guid: a5339fa646b3d4943be1b6ae3168b8f6, type: 3}
+  inputDeadZone: 0.01
+--- !u!61 &6870349723541371374
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.61, y: 3.5}
+    newSize: {x: 1, y: 0.5}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 0.5}
+  m_EdgeRadius: 0
+--- !u!114 &358752853953956181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c74cea5fadba4d45853f3abdf02a635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  state: {fileID: 11400000, guid: fe0c9f169afcbe84da0d8ff8d45968cc, type: 2}
+  startingHealthPotions: 5
+  tempHP: 0
+--- !u!114 &8846224400970428678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74876d74b7b71d24d8a1f4e0878fa7d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDodge
+  dodgeDuration: 0.45
+  dodgeSpeed: 14
+  cooldown: 1.1
+  iframeStartNormalized: 0.22
+  iframeEndNormalized: 0.62
+--- !u!114 &9171742491401728622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc0112b4383bd0d45b2cb6c131298f19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealChannel
+  channelDuration: 1
+--- !u!114 &8822334455667788999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4e3d2c1b0a9182736455463728190ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealChannelLabel
+  font: {fileID: 11400000, guid: 69b97df759067324692ab68d81c579c0, type: 2}
+  localOffset: {x: 0, y: 0.55, z: 0}
+  fontSize: 2.2
+--- !u!114 &7571927485519907787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8b9cbd9316572848b9c8cc237bf189c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamblingArmController
+  rollDurationSeconds: 1
+  punchAttackDuration: 0.28
+  shurikenAttackDuration: 0.22
+  gloveAttackDuration: 0.32
+  hammerAttackDuration: 0.42
+  punchDamage: 2
+  shurikenDamageEach: 1
+  gloveDamage: 2
+  hammerDamage: 3
+  punchRadius: 0.55
+  punchReach: 0.9
+  hammerShockwaveRadius: 1.8
+  shurikenSpreadDegrees: 22
+  projectileKnockback: 5
+  projectileSpeed: 14
+  projectileVisualScaleTuning: 0.35
+  mushroomRadiusMul: 1.55
+  mushroomProjectileScaleMul: 1.45
+  critDamageMultiplier: 2
+  paddleKnockbackBonus: 9
+  shurikenPrefab: {fileID: 5815509036219185489, guid: cd832ef51514da54592c56f9e7f97438, type: 3}
+  gloveProjectilePrefab: {fileID: 149714805577715311, guid: 82847b2d41dbdc04c9eb2ad9a51bc307, type: 3}
+  iceShurikenPrefab: {fileID: 7090190713316893253, guid: 103235b603d746946b2366ee694b5636, type: 3}
+  iceGlovePrefab: {fileID: 6439750688459276604, guid: bf9ddb5f589b940498c67a0fa0d882bb, type: 3}
+  goldCoinPrefab: {fileID: 3558442363039286049, guid: bd95292f680305c4eae9005f9ca29e56, type: 3}
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  slotHud: {fileID: 0}
+--- !u!114 &2018902493188459698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bebca427c2928e4f9db1e8d8ba684d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamblingArmVfx
+  projectileFireVfxPrefab: {fileID: 5712219488875869251, guid: 29f4c72f9a1d9d446945740c2819895b, type: 3}
+  cinderBlackSmokePrefab: {fileID: 4380918445339287248, guid: 4b38b1b3e38ed7e499c047067beb6122, type: 3}
+  hitCrossFire: {fileID: 6263782476919498309, guid: 1fd2749f2a4056446881dce86ed70c39, type: 3}
+  hitCrossIce: {fileID: 888444077320411739, guid: 0c2509361b13505428ce788b7f846686, type: 3}
+  hitCrossPlain: {fileID: 8525990746615576120, guid: b85d21f3b8fed714bacf0c4fd50fa512, type: 3}
+  punchTrailFire: {fileID: 2360655870356088562, guid: 57a776ff377f3c44e8403e2067a4d41f, type: 3}
+  punchTrailIce: {fileID: 5318118474938795680, guid: 69d8f05fda8421849a84b27b8c0d773d, type: 3}
+  punchTrailPlain: {fileID: 6710139492206580332, guid: 95b8d3d65b5d7f1409c4ed1723887826, type: 3}
+  shockwaveFire: {fileID: 2504214343621411470, guid: 3ed0d324122d7b24eaec75c55c74aafc, type: 3}
+  shockwaveIce: {fileID: 5112403345868107898, guid: 6f34ef0d986e9db4199cf75805f79753, type: 3}
+  shockwaveGroundPlain: {fileID: 3432958286849152088, guid: 87ee7299dd44ed747af24dbb91bcd33b, type: 3}
+  defaultVfxLifetime: 2.5
+  mushroomTrailScaleMul: 1.35
+  mushroomShockwaveScaleMul: 1.4
+  punchTrailLocalOffset: {x: 0, y: 0, z: 0}
+  punchTrailRotationOffsetDegrees: -120
+--- !u!1 &4099271938391064287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6166107476431683464}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6166107476431683464
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4099271938391064287}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1274032404421835605}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

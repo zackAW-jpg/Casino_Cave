@@ -10,6 +10,10 @@ public class BossBullet : MonoBehaviour
     public int damage = 2;
     public float lifeTime = 8f;
 
+    [Header("Walls")]
+    [Tooltip("Spawned at wall contact when this projectile is destroyed by a RoomWall.")]
+    public GameObject wallBreakVfxPrefab;
+
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
@@ -19,6 +23,14 @@ public class BossBullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.isTrigger) return;
+
+        if (ProjectileWallBreak.IsRoomWall(other))
+        {
+            ProjectileWallBreak.SpawnBreakVfx(ProjectileWallBreak.ContactPoint(other, transform.position), wallBreakVfxPrefab);
+            Destroy(gameObject);
+            return;
+        }
+
         if (other.GetComponentInParent<BossHealth>() != null) return;
         if (!other.CompareTag("Player")) return;
 

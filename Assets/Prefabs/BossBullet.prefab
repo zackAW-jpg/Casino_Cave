@@ -112,6 +112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossBullet
   damage: 2
   lifeTime: 8
+  wallBreakVfxPrefab: {fileID: 1429954232896169633, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}
 --- !u!212 &7081596163113597604
 SpriteRenderer:
   serializedVersion: 2

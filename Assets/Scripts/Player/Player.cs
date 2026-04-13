@@ -6,6 +6,6 @@ public class Player :MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Gold: " + state.gold);
+        Debug.Log("Chips: " + state.gold);
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Run HUD: HP bar (with hurt feedback) and gold. Assign PlayerStateSO + optional PlayerHealth on the player.
+/// Run HUD: HP bar (with hurt feedback) and chips (PlayerStateSO still uses <c>gold</c> as the stat field). Assign PlayerStateSO + optional PlayerHealth on the player.
 /// </summary>
 public class PlayerHUD : MonoBehaviour
 {
@@ -22,7 +22,7 @@ public class PlayerHUD : MonoBehaviour
     [Tooltip("Optional: bar root for a small scale punch on damage.")]
     public RectTransform hpBarRoot;
 
-    [Header("Gold")]
+    [Header("Chips (TMP field; still named goldText for prefab compatibility)")]
     public TextMeshProUGUI goldText;
 
     [Header("Health potions")]
@@ -197,7 +197,7 @@ public class PlayerHUD : MonoBehaviour
     private void RefreshGoldText()
     {
         if (goldText != null)
-            goldText.text = $"Gold: {playerState.gold}";
+            goldText.text = $"Chips: {playerState.gold}";
     }
 
     private void RefreshPotionIcons()

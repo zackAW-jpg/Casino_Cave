@@ -26,6 +26,16 @@ public class SecurityGuard : MonoBehaviour
     [Tooltip("Brief highlight if there is no Animator or no controller assigned.")]
     public bool punchFlashIfNoAnimator = true;
 
+    [Header("Attack VFX")]
+    [Tooltip("Spawned when a melee hit lands on the player (after dodge check).")]
+    public GameObject attackVfxPrefab;
+
+    [Tooltip("If set, VFX spawns at this transform. Otherwise spawn offset from the guard toward the player.")]
+    public Transform attackVfxSpawnPoint;
+
+    [Tooltip("World-units from guard toward player when no spawn point is set.")]
+    public float attackVfxForwardDistance = 0.35f;
+
     [Header("Set by DungeonRoomSpawner at runtime")]
     public Transform target;
     public Vector2Int roomCoord;
@@ -133,8 +143,31 @@ public class SecurityGuard : MonoBehaviour
             return;
 
         playerHealth.TakeDamage(attackDamage);
+        SpawnAttackVfx();
         PlayPunchAttackAnimation();
         ApplyKnockbackToPlayer();
+    }
+
+    private void SpawnAttackVfx()
+    {
+        if (attackVfxPrefab == null)
+            return;
+
+        Vector3 pos;
+        if (attackVfxSpawnPoint != null)
+            pos = attackVfxSpawnPoint.position;
+        else if (target != null)
+        {
+            Vector2 flat = (Vector2)target.position - (Vector2)transform.position;
+            if (flat.sqrMagnitude > 0.0001f)
+                pos = transform.position + (Vector3)(flat.normalized * attackVfxForwardDistance);
+            else
+                pos = transform.position;
+        }
+        else
+            pos = transform.position;
+
+        Instantiate(attackVfxPrefab, pos, Quaternion.identity);
     }
 
     private void PlayPunchAttackAnimation()

@@ -14,7 +14,11 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>Last facing used for dodge when there is no movement input this frame.</summary>
     public Vector2 LastNonZeroMoveDir { get; private set; } = Vector2.down;
 
+    /// <summary>Input read this frame (after Update read).</summary>
     public Vector2 CurrentMoveInput => moveInput;
+
+    /// <summary>Input from the previous frame (for directional sprite / diagonal rules).</summary>
+    public Vector2 PreviousFrameMoveInput { get; private set; }
 
     void Awake()
     {
@@ -43,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        PreviousFrameMoveInput = moveInput;
         moveInput = controls.Player.Move.ReadValue<Vector2>();
         if (moveInput.sqrMagnitude > 0.01f)
             LastNonZeroMoveDir = moveInput.normalized;

@@ -160,6 +160,9 @@ MonoBehaviour:
   animator: {fileID: 0}
   punchAttackTrigger: Punch
   punchFlashIfNoAnimator: 1
+  attackVfxPrefab: {fileID: 8525990746615576120, guid: b85d21f3b8fed714bacf0c4fd50fa512, type: 3}
+  attackVfxSpawnPoint: {fileID: 0}
+  attackVfxForwardDistance: 0.35
   target: {fileID: 0}
   roomCoord: {x: 0, y: 0}
   dungeonState: {fileID: 0}
