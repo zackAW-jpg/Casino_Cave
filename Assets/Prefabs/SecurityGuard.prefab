@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4150153862006740452}
   - component: {fileID: 1043599540206161613}
   - component: {fileID: 5957113139703372498}
+  - component: {fileID: 7722334455667788123}
   - component: {fileID: 8115428615837035052}
   m_Layer: 0
   m_Name: SecurityGuard
@@ -85,8 +86,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 69986319326eb5442bfd6ef834294c2e, type: 3}
-  m_Color: {r: 0.3490566, g: 0.1728818, b: 0.1728818, a: 1}
+  m_Sprite: {fileID: 4796394016262144139, guid: c8c23504fb53fd94ebf0b82835f711e6, type: 3}
+  m_Color: {r: 1, g: 0.84313726, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -110,7 +111,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -166,6 +167,42 @@ MonoBehaviour:
   target: {fileID: 0}
   roomCoord: {x: 0, y: 0}
   dungeonState: {fileID: 0}
+--- !u!114 &7722334455667788123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3147816370311090463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6789012345678abcd9001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SecurityGuardDiceRollVisual
+  rollFrames:
+  - {fileID: 4796394016262144139, guid: c8c23504fb53fd94ebf0b82835f711e6, type: 3}
+  - {fileID: 7593991043121532099, guid: a43f82dc57d1b6940b6d8e19537b85e9, type: 3}
+  - {fileID: 1983045738663786606, guid: 9d309ad870e2bf84fb843c3c8d787e05, type: 3}
+  - {fileID: -4695289327386910235, guid: 2b368428bca820d43b1c4a7cf05336b8, type: 3}
+  - {fileID: 1391421197841012777, guid: 3c3287cf6a90c3b4498266a2b9f48bcf, type: 3}
+  - {fileID: 66230221666923653, guid: 847df8972fea3d845ae66a6a80c8975a, type: 3}
+  - {fileID: 7887561464198322737, guid: 7687f4bbe9405444682d2fd62678c0b5, type: 3}
+  - {fileID: -9097102289986590951, guid: e9edbd2f9f39465429a7109963c057f2, type: 3}
+  - {fileID: -2647406564763415261, guid: 285c4204ec136f94ba08d958b7dade89, type: 3}
+  - {fileID: -6492563988539573071, guid: ae638c089369d0544bcca981ace84f50, type: 3}
+  - {fileID: 2736508518215283861, guid: 75de1f1521931f547808f9a0fc854404, type: 3}
+  - {fileID: -8124940879012154384, guid: de018ede851bde14b8d920b072773297, type: 3}
+  - {fileID: -5334069975754957166, guid: fa524ab673b034a4b9ab6b15e5544cf6, type: 3}
+  - {fileID: -2429749996359916784, guid: 2d595fee31842d04c9de7215a5340803, type: 3}
+  - {fileID: -3364527923072781139, guid: 66f1c43caca534e459ff547578d7ddce, type: 3}
+  - {fileID: -1702291646723170181, guid: 8770500c82d2acf4b825f3a75305ec62, type: 3}
+  rb: {fileID: 4150153862006740452}
+  rollCyclesPerSecond: 1.3
+  moveThreshold: 0.08
+  facingBasis: 1
+  facingFineTuneDegrees: 0
+  spriteArtRotationDegrees: 90
+  invertRollFrameOrder: 1
 --- !u!58 &8115428615837035052
 CircleCollider2D:
   m_ObjectHideFlags: 0

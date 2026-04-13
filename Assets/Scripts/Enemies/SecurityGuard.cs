@@ -41,6 +41,9 @@ public class SecurityGuard : MonoBehaviour
     public Vector2Int roomCoord;
     public DungeonStateSO dungeonState;
 
+    /// <summary>Normalized chase direction this frame when moving toward the player; zero when idle/dormant/attacking.</summary>
+    public Vector2 IntendedMoveDirection { get; private set; }
+
     private Rigidbody2D _rb;
     private float _cooldownTimer;
     private float _knockbackTimer;
@@ -71,6 +74,7 @@ public class SecurityGuard : MonoBehaviour
         if (_knockbackTimer > 0f)
         {
             _knockbackTimer -= Time.deltaTime;
+            IntendedMoveDirection = Vector2.zero;
             return;
         }
 
@@ -80,6 +84,7 @@ public class SecurityGuard : MonoBehaviour
         {
             _wasPlayerInRoom = false;
             _roomEngageTimer = engageDelayAfterRoomEnter;
+            IntendedMoveDirection = Vector2.zero;
             HoldDormant();
             return;
         }
@@ -93,6 +98,7 @@ public class SecurityGuard : MonoBehaviour
         if (_roomEngageTimer > 0f)
         {
             _roomEngageTimer -= Time.deltaTime;
+            IntendedMoveDirection = Vector2.zero;
             HoldDormant();
             return;
         }
@@ -107,10 +113,12 @@ public class SecurityGuard : MonoBehaviour
         if (distance > attackRange)
         {
             Vector2 dir = toTarget.normalized;
+            IntendedMoveDirection = dir;
             _rb.linearVelocity = dir * (moveSpeed * speedMul);
         }
         else
         {
+            IntendedMoveDirection = Vector2.zero;
             _rb.linearVelocity = Vector2.zero;
 
             _cooldownTimer -= Time.deltaTime;
@@ -124,6 +132,7 @@ public class SecurityGuard : MonoBehaviour
 
     private void HoldDormant()
     {
+        IntendedMoveDirection = Vector2.zero;
         _rb.linearVelocity = Vector2.zero;
     }
 
