@@ -1,51 +1,26 @@
 using UnityEngine;
 
-/// <summary>
-/// Trigger transition to the adjacent room. Visuals: optional door sprite from
-/// <see cref="DungeonRoomController"/> on a child <see cref="doorGraphicRoot"/>, or a runtime-spawned panel,
-/// or legacy paired jamb icons from <see cref="iconSprite"/>.
-/// </summary>
-/// <remarks>
-/// <b>Tighter door hitbox:</b> each door object uses a <see cref="UnityEngine.BoxCollider2D"/> on the same
-/// GameObject as this script. Open <c>Assets/Prefabs/Rooms/Room.prefab</c>, expand <c>Doors</c>, select
-/// <c>Door_N</c> / <c>Door_E</c> / etc., and reduce <b>Size</b> (and use <b>Offset</b> to keep the box
-/// centered on the opening). This script does not resize the collider.
-/// </remarks>
 [RequireComponent(typeof(Collider2D))]
 public class Door : MonoBehaviour
 {
     public DoorDirection direction;
 
     [Header("Door graphic placement (prefab)")]
-    [Tooltip("Use the child named DoorGraphic (or any transform). Select it in the Hierarchy and move, rotate, and scale in the Scene view — that pose is what you see in play mode.")]
     [SerializeField] Transform doorGraphicRoot;
-
-    [Tooltip("When on, each room load sets the child SpriteRenderer Sorting Order to match Door Panel Sorting Order below. Turn off to control sorting only on the SpriteRenderer.")]
     [SerializeField] bool syncGraphicSortingOrder = true;
 
     [Header("Runtime panel (only if Door Graphic Root is not assigned)")]
-    [Tooltip("Sorting order for a spawned DoorPanel when no doorGraphicRoot is set.")]
     public int doorPanelSortingOrder = 4;
-
-    [Tooltip("Uniform scale for spawned DoorPanel.")]
     public float doorPanelUniformScale = 1f;
-
-    [Tooltip("Local offset for spawned DoorPanel.")]
     public Vector2 doorPanelLocalOffset;
-
-    [Tooltip("Local Z rotation in degrees for spawned DoorPanel.")]
     public float doorPanelLocalEulerZ = 0f;
 
     [Header("Doorway icons (fallback when no panel sprite)")]
-    [Tooltip("Small jamb icons only used when there is no sprite from the Room (Door Graphic N/E/S/W) and none on the DoorGraphic SpriteRenderer in the prefab.")]
     public Sprite iconSprite;
-    [Tooltip("Distance from door center along the wall, to each icon (left/right or up/down).")]
     public float iconLocalHalfWidth = 0.35f;
-    [Tooltip("For North/South doors: local Y tweak. For East/West: local X tweak.")]
     public float iconLocalY = 0f;
     public int iconSortingOrder = 5;
     public Color iconColor = Color.white;
-    [Tooltip("Uniform scale for each icon sprite.")]
     public float iconScale = 0.35f;
 
     private DungeonRoomController _roomController;
@@ -55,9 +30,9 @@ public class Door : MonoBehaviour
         _roomController = GetComponentInParent<DungeonRoomController>();
     }
 
-    /// <summary>
-    /// Called by <see cref="DungeonRoomController.SetupFromRoomState"/> after door active state is set.
-    /// </summary>
+    
+    
+    
     public void ConfigureVisuals(Sprite roomAssignedPanelSprite)
     {
         ClearGeneratedVisuals();
@@ -85,9 +60,9 @@ public class Door : MonoBehaviour
             CreateDoorwayIcons();
     }
 
-    /// <summary>
-    /// Room controller sprites override; if those are empty, use whatever is already on the prefab DoorGraphic (so you can assign art only on the child).
-    /// </summary>
+    
+    
+    
     Sprite ResolvePanelSprite(Sprite fromRoom)
     {
         if (fromRoom != null)
@@ -187,15 +162,10 @@ public class Door : MonoBehaviour
         sr.color = iconColor;
         sr.sortingOrder = iconSortingOrder;
     }
-
-    [Tooltip("Ignore door transitions briefly after the player takes damage (avoids knockback pushing into triggers).")]
     public float ignoreAfterDamageSeconds = 0.45f;
-
-    [Tooltip("After a successful room transition, block further door triggers for this long so the player can leave the doorway.")]
     public float doorCooldownAfterTransitionSeconds = 1f;
 
     [Header("Audio (optional)")]
-    [Tooltip("Played at this door when a room transition succeeds.")]
     public AudioClip doorUseSound;
     public AudioSource doorAudioSource;
 

@@ -3,36 +3,27 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Run HUD: HP bar (with hurt feedback) and chips (PlayerStateSO still uses <c>gold</c> as the stat field). Assign PlayerStateSO + optional PlayerHealth on the player.
-/// </summary>
 public class PlayerHUD : MonoBehaviour
 {
     [Header("Data")]
     public PlayerStateSO playerState;
 
     [Header("Player (for damage events)")]
-    [Tooltip("Player root with PlayerHealth. If null, HP bar still updates from state but hurt animation only runs when health drops (polled).")]
     public PlayerHealth playerHealth;
 
     [Header("HP bar")]
     public Image hpFillImage;
-    [Tooltip("Image type must be Filled, Fill Method Horizontal.")]
     public Image hpHurtOverlay;
-    [Tooltip("Optional: bar root for a small scale punch on damage.")]
     public RectTransform hpBarRoot;
 
     [Header("Chips (TMP field; still named goldText for prefab compatibility)")]
     public TextMeshProUGUI goldText;
 
     [Header("Health potions")]
-    [Tooltip("Flask icons ordered left → right. The leftmost is the bottom of the stack (filled first). Active count = healthPotionCount.")]
     public GameObject[] potionIcons;
 
     [Header("Tuning")]
-    [Tooltip("Seconds for HP fill to catch up to actual HP after a change.")]
     public float hpFillLerpDuration = 0.2f;
-    [Tooltip("Hurt overlay max alpha.")]
     public float hurtFlashPeakAlpha = 0.45f;
     public float hurtFlashDuration = 0.25f;
     public float hurtScalePunch = 1.06f;
@@ -91,7 +82,7 @@ public class PlayerHUD : MonoBehaviour
     {
         if (playerState == null) return;
 
-        // Smooth fill toward actual HP
+        
         if (hpFillImage != null && playerState.maxHP > 0)
         {
             float target = playerState.currentHP;

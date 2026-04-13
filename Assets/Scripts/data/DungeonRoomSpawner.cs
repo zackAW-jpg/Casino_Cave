@@ -8,14 +8,9 @@ public class DungeonRoomSpawner : MonoBehaviour
     public GameObject roomPrefab;
 
     [Header("Layout (center-to-center between rooms)")]
-    [Tooltip("Vertical spacing between room centers.")]
     [FormerlySerializedAs("roomWorldSize")]
     public float roomSpacingY = 20f;
-
-    [Tooltip("Horizontal spacing between room centers. Leave 0 to use Auto Balance, or same as Y if Auto Balance is off.")]
     public float roomSpacingX = 0f;
-
-    [Tooltip("When roomSpacingX is 0, compute X so the horizontal gap between room edges matches the vertical gap (good when the room art is wider than tall).")]
     public bool autoBalanceHorizontalSpacing = true;
 
     public Transform playerTransform;
@@ -29,17 +24,13 @@ public class DungeonRoomSpawner : MonoBehaviour
     public GameObject securityGuardPrefab;
 
     [Header("Boss")]
-    [Tooltip("Spawned in the room marked RoomEventType.Boss.")]
     public GameObject bossPrefab;
-    [Tooltip("Spawned in the boss room after the boss is defeated (or when loading a save with boss already defeated).")]
     public GameObject caveExitBeaconPrefab;
     public BossHUD bossHUD;
-    [Tooltip("Coins dropped around the boss when it dies (uses the same prefab as treasure rooms if coinPrefab is set).")]
     public int bossCoinsOnDeath = 18;
     public float bossCoinSpawnRadius = 2.5f;
 
     [Header("Start room spawn")]
-    [Tooltip("Which spawn point in the start room (0,0) to place the player at.")]
     public DoorDirection startRoomSpawnSide = DoorDirection.North;
 
     private Dictionary<Vector2Int, DungeonRoomController> _roomInstances = new Dictionary<Vector2Int, DungeonRoomController>();
@@ -77,10 +68,10 @@ public class DungeonRoomSpawner : MonoBehaviour
 
             _roomInstances[roomState.coord] = ctrl;
 
-            // Spawn one security guard in enemy rooms
+            
             if (securityGuardPrefab != null && roomState.eventType == RoomEventType.NormalEnemies)
             {
-                Vector3 guardPos = instance.transform.position; // center of the room
+                Vector3 guardPos = instance.transform.position; 
                 GameObject guard = Instantiate(securityGuardPrefab, guardPos, Quaternion.identity, instance.transform);
                 SecurityGuard guardAI = guard.GetComponent<SecurityGuard>();
                 if (guardAI != null)
@@ -91,19 +82,19 @@ public class DungeonRoomSpawner : MonoBehaviour
                     guardAI.dungeonState = dungeonState;
                 }
             }
-            // Spawn coins in treasure rooms
+            
             if (coinPrefab != null && roomState.eventType == RoomEventType.Treasure)
             {
                 for (int i = 0; i < coinsPerTreasureRoom; i++)
                 {
-                    // Random position within a circle around the room center
+                    
                     Vector2 offset = Random.insideUnitCircle * (Mathf.Min(sx, sy) * 0.3f);
                     Vector3 coinPos = instance.transform.position + new Vector3(offset.x, offset.y, 0f);
 
                     Instantiate(coinPrefab, coinPos, Quaternion.identity, instance.transform);
                 }
             }
-            // Spawn merchant NPC in merchant rooms
+            
             if (roomState.eventType == RoomEventType.Merchant && merchantSpawnTable != null)
             {
                 GameObject merchantPrefab = merchantSpawnTable.PickPrefab();
@@ -179,7 +170,7 @@ public class DungeonRoomSpawner : MonoBehaviour
         GameplaySaveContext.PersistRun();
     }
 
-    /// <summary>Destroys instantiated room roots parented under this spawner.</summary>
+    
     public void DestroySpawnedRooms()
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
@@ -188,10 +179,10 @@ public class DungeonRoomSpawner : MonoBehaviour
         _roomInstances.Clear();
     }
 
-    /// <summary>Effective horizontal center spacing (after auto-balance or manual roomSpacingX).</summary>
+    
     public float GetEffectiveSpacingX() => ResolveRoomSpacingX();
 
-    /// <summary>Vertical center spacing.</summary>
+    
     public float GetEffectiveSpacingY() => roomSpacingY;
 
     private float ResolveRoomSpacingX()
@@ -212,9 +203,9 @@ public class DungeonRoomSpawner : MonoBehaviour
         return width + Mathf.Max(0f, gapY);
     }
 
-    /// <summary>
-    /// Axis-aligned footprint of all SpriteRenderers under the prefab (world-oriented while evaluating the prefab).
-    /// </summary>
+    
+    
+    
     private static bool TryGetRoomFootprint(GameObject prefab, out float width, out float height)
     {
         width = height = 0f;

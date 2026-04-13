@@ -1,13 +1,8 @@
 using UnityEngine;
 
-/// <summary>
-/// After physics/movement, keeps the player inside the current room interior so kinematic enemies cannot shove them through walls.
-/// Runs late in the physics step via execution order.
-/// </summary>
 [DefaultExecutionOrder(100)]
 public class PlayerRoomBoundsClamp : MonoBehaviour
 {
-    [Tooltip("Extra shrink beyond collider half-extents so the body stays clearly inside the walkable area.")]
     public float extraInset = 0.1f;
 
     Rigidbody2D _rb;

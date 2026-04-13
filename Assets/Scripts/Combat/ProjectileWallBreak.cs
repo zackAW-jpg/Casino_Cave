@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Shared helpers for projectiles hitting <see cref="RoomWall"/> colliders.
-/// </summary>
 public static class ProjectileWallBreak
 {
     public static bool IsRoomWall(Collider2D other)

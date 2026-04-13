@@ -10,7 +10,6 @@ public class Health : MonoBehaviour
     public Vector3 popupOffset = new Vector3(0f, 0.2f, 0f);
 
     [Header("Audio (optional — grunts / generic enemies)")]
-    [Tooltip("Plays when this enemy takes damage (e.g. assign grunt hit SFX on the Security Guard prefab).")]
     public AudioSource hurtAudioSource;
     public AudioClip hurtSound;
     public AudioClip deathSound;

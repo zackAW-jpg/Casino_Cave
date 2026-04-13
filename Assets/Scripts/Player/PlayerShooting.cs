@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerShooting : MonoBehaviour
 {
     [Header("Setup")]
-    public Transform firePoint;         // where bullets come from
-    public GameObject bulletPrefab;     // prefab with Rigidbody2D
+    public Transform firePoint;         
+    public GameObject bulletPrefab;     
     public float bulletSpeed = 15f;
 
     [Header("Audio")]

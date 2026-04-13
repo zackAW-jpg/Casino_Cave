@@ -10,7 +10,6 @@ public class CoinBullet : MonoBehaviour
     public float knockbackForce = 5f;
 
     [Header("Walls")]
-    [Tooltip("Spawned at wall contact when this projectile is destroyed by a RoomWall.")]
     public GameObject wallBreakVfxPrefab;
 
     public float lifeTime = 5f;
@@ -27,7 +26,7 @@ public class CoinBullet : MonoBehaviour
     {
         if (other.isTrigger) return;
 
-        // Ignore hitting the player who fired us
+        
         if (other.CompareTag("Player")) return;
 
         if (ProjectileWallBreak.IsRoomWall(other))
@@ -39,7 +38,7 @@ public class CoinBullet : MonoBehaviour
 
         BossHealth bossHealth = other.GetComponentInParent<BossHealth>();
 
-        // Apply knockback to rigidbodies except bosses (bosses are typically Kinematic anyway)
+        
         Rigidbody2D hitRb = other.attachedRigidbody;
         if (bossHealth == null && hitRb != null && hitRb.bodyType == RigidbodyType2D.Dynamic)
         {

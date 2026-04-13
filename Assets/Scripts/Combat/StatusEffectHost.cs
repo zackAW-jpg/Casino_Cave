@@ -1,14 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>Optional component on enemies/bosses for ice slow and fire cinders from gambling arm hits.</summary>
 public class StatusEffectHost : MonoBehaviour
 {
-    [Tooltip("Multiplies movement speed while ice slow is active.")]
     [Range(0.05f, 1f)] public float iceSlowMultiplier = 0.45f;
 
     [Header("Ice slow visual")]
-    [Tooltip("Multiplies sprite colors while slowed (bluer).")]
     public Color iceTintColor = new Color(0.72f, 0.88f, 1.08f, 1f);
 
     public float MoveSpeedMultiplier { get; private set; } = 1f;

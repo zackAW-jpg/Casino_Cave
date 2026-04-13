@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Slow projectile fired by the boss. Damages the player; ignores other layers by tag.
-/// </summary>
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class BossBullet : MonoBehaviour
@@ -11,7 +8,6 @@ public class BossBullet : MonoBehaviour
     public float lifeTime = 8f;
 
     [Header("Walls")]
-    [Tooltip("Spawned at wall contact when this projectile is destroyed by a RoomWall.")]
     public GameObject wallBreakVfxPrefab;
 
     private void Awake()

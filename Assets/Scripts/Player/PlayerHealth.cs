@@ -7,7 +7,6 @@ public class PlayerHealth : MonoBehaviour
     public PlayerStateSO state;
 
     [Header("Health potions")]
-    [Tooltip("How many potions at a new run (written to PlayerStateSO.healthPotionCount in Awake).")]
     public int startingHealthPotions = 5;
 
     [Header("Audio (optional)")]
@@ -17,20 +16,16 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Death presentation (optional)")]
     public Animator deathAnimator;
-    [Tooltip("Animator trigger when the player dies (optional).")]
     public string deathAnimTrigger = "Death";
-    [Tooltip("Realtime seconds to wait after firing the death trigger before showing the UI.")]
     public float deathAnimHoldSeconds = 0.85f;
-    [Tooltip("Used when no animator/trigger is set.")]
     public float fallbackDeathHoldSeconds = 0.6f;
 
     public event Action<int, int> OnHealthChanged;
 
-    /// <summary>Time.time when damage was last applied (after temp HP). Used to avoid accidental door transitions during knockback.</summary>
+    
     public float LastDamageTime { get; private set; } = -1000f;
 
     [Header("Temporary HP")]
-    [Tooltip("Runtime-only temporary HP that is consumed before currentHP.")]
     public int tempHP = 0;
 
     bool _dead;
@@ -134,7 +129,7 @@ public class PlayerHealth : MonoBehaviour
         OnHealthChanged?.Invoke(state.currentHP, state.maxHP);
     }
 
-    /// <summary>Door / transitions can use this to ignore triggers right after hits + knockback.</summary>
+    
     public bool IsRecentlyDamaged(float windowSeconds)
     {
         return Time.time - LastDamageTime < windowSeconds;
@@ -156,7 +151,7 @@ public class PlayerHealth : MonoBehaviour
             Debug.LogWarning("PlayerHealth: no GameplayMenusController in scene — death UI skipped.", this);
     }
 
-    /// <summary>After a full dungeon regen (retry / replay / pause restart).</summary>
+    
     public void PrepareForFreshRunAfterDungeonReset()
     {
         _dead = false;

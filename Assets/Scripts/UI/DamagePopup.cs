@@ -15,7 +15,7 @@ public class DamagePopup : MonoBehaviour
 
     private void Awake()
     {
-        // Try regular UI Text first
+        
         _uiText = GetComponentInChildren<Text>();
         if (_uiText != null)
         {
@@ -23,7 +23,7 @@ public class DamagePopup : MonoBehaviour
             return;
         }
 
-        // Fallback to TextMeshPro
+        
         _tmpText = GetComponentInChildren<TMP_Text>();
         if (_tmpText != null)
         {
@@ -43,10 +43,10 @@ public class DamagePopup : MonoBehaviour
 
     private void Update()
     {
-        // Move upward
+        
         transform.position += Vector3.up * (floatSpeed * Time.deltaTime);
 
-        // Fade out over lifetime
+        
         _timer += Time.deltaTime;
         float t = Mathf.Clamp01(_timer / lifetime);
         float a = 1f - t;

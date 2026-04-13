@@ -2,14 +2,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>
-/// Hold R to drink a health potion after a 1s channel. Moving is allowed; dodge and attack are blocked.
-/// Interrupted by damage: no potion consumed. On success: consumes one potion and heals up to max HP.
-/// </summary>
 public class PlayerHealChannel : MonoBehaviour
 {
     [Header("Channel")]
-    [Tooltip("Seconds before the potion is consumed and heal is applied.")]
     public float channelDuration = 1f;
 
     [Header("Audio (optional)")]
@@ -117,7 +112,7 @@ public class PlayerHealChannel : MonoBehaviour
         GameplaySaveContext.PersistRun();
     }
 
-    /// <summary>Called from <see cref="PlayerHealth.TakeDamage"/> before damage is applied.</summary>
+    
     public void CancelFromDamage()
     {
         if (!IsChannelingHeal)

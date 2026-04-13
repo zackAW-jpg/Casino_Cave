@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 
-/// <summary>Shows "healing..." above the player while <see cref="PlayerHealChannel"/> is active.</summary>
 [RequireComponent(typeof(PlayerHealChannel))]
 public class PlayerHealChannelLabel : MonoBehaviour
 {

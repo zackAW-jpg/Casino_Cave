@@ -6,14 +6,13 @@ public class CoinPickup : MonoBehaviour
     public int goldAmount = 1;
 
     [Header("Look (pickups)")]
-    [Tooltip("If both are set, the chip uses one or the other at random (50/50). Same value in player state either way.")]
     public Sprite chipSpriteRed;
 
     public Sprite chipSpriteBlack;
 
     private void Awake()
     {
-        // Make sure this collider is a trigger so the player can walk through it
+        
         var col = GetComponent<Collider2D>();
         col.isTrigger = true;
 

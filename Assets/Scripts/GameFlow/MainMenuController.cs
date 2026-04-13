@@ -3,10 +3,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-/// <summary>
-/// Title screen: Continue (only when a run is in progress), New Game, Exit.
-/// Assign optional <see cref="Image"/> backgrounds on each button group in the Inspector.
-/// </summary>
 [DisallowMultipleComponent]
 public class MainMenuController : MonoBehaviour
 {
@@ -20,7 +16,6 @@ public class MainMenuController : MonoBehaviour
     public Slider loadingProgressSlider;
 
     [Header("Main menu music (optional)")]
-    [Tooltip("Looping music while this menu is open. Drag your soundtrack .ogg/.wav here.")]
     public AudioClip menuMusicLoop;
     [Range(0f, 1f)] public float menuMusicVolume = 0.55f;
 

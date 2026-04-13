@@ -1,10 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Picks one of four cardinal sprites from movement: single-axis uses that axis; on diagonals,
-/// keeps facing the axis that was already held when the second axis was added. Idle→diagonal
-/// in one frame picks horizontal vs vertical randomly.
-/// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerFacingSprite2D : MonoBehaviour
 {
@@ -15,8 +10,6 @@ public class PlayerFacingSprite2D : MonoBehaviour
     public Sprite spriteDown;
     public Sprite spriteLeft;
     public Sprite spriteRight;
-
-    [Tooltip("Matches movement dead zone.")]
     public float inputDeadZone = 0.01f;
 
     private SpriteRenderer _sr;
@@ -73,7 +66,7 @@ public class PlayerFacingSprite2D : MonoBehaviour
         if (curV)
             return cur.y > 0f ? Facing.Up : Facing.Down;
 
-        // Diagonal
+        
         if (prevD && curD)
             return locked;
 

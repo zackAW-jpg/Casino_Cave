@@ -9,40 +9,27 @@ public class SecurityGuard : MonoBehaviour
     public float attackRange = 1f;
     public float attackCooldown = 0.7f;
     public int attackDamage = 1;
-    [Tooltip("Knockback force applied to the player when this guard hits them.")]
     public float playerKnockbackForce = 4f;
 
     [Header("Room aggro")]
-    [Tooltip("When the player is not in this room, the guard stays dormant (no movement).")]
     public bool dormantWhenPlayerOutsideRoom = true;
-    [Tooltip("After the player enters this room, guards wait this long before they can move or attack.")]
     public float engageDelayAfterRoomEnter = 0.2f;
 
     [Header("Attack animation")]
-    [Tooltip("Optional: assign an Animator Controller with a trigger named like Punch Attack.")]
     public Animator animator;
-    [Tooltip("Animator trigger fired on each successful melee hit.")]
     public string punchAttackTrigger = "Punch";
-    [Tooltip("Brief highlight if there is no Animator or no controller assigned.")]
     public bool punchFlashIfNoAnimator = true;
 
     [Header("Audio (optional)")]
-    [Tooltip("Whoosh when a melee attack connects.")]
     public AudioClip meleeSwingHitSound;
     public AudioSource sfxSource;
-    [Tooltip("Idle grunts / shuffles while chasing the player in the same room.")]
     public AudioClip[] gruntAmbientSounds;
     public float gruntAmbientMinInterval = 4f;
     public float gruntAmbientMaxInterval = 11f;
 
     [Header("Attack VFX")]
-    [Tooltip("Spawned when a melee hit lands on the player (after dodge check).")]
     public GameObject attackVfxPrefab;
-
-    [Tooltip("If set, VFX spawns at this transform. Otherwise spawn offset from the guard toward the player.")]
     public Transform attackVfxSpawnPoint;
-
-    [Tooltip("World-units from guard toward player when no spawn point is set.")]
     public float attackVfxForwardDistance = 0.35f;
 
     [Header("Set by DungeonRoomSpawner at runtime")]
@@ -50,7 +37,7 @@ public class SecurityGuard : MonoBehaviour
     public Vector2Int roomCoord;
     public DungeonStateSO dungeonState;
 
-    /// <summary>Normalized chase direction this frame when moving toward the player; zero when idle/dormant/attacking.</summary>
+    
     public Vector2 IntendedMoveDirection { get; private set; }
 
     private Rigidbody2D _rb;
@@ -71,9 +58,9 @@ public class SecurityGuard : MonoBehaviour
             sfxSource = GetComponent<AudioSource>();
     }
 
-    /// <summary>
-    /// Called by CoinBullet via SendMessage when this guard is hit, so we don't overwrite velocity for a moment.
-    /// </summary>
+    
+    
+    
     public void OnKnockbackReceived()
     {
         _knockbackTimer = 0.15f;

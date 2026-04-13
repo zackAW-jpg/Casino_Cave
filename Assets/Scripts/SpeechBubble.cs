@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class SpeechBubble : MonoBehaviour
 {
     [Header("References")]
-    [Tooltip("Drag the GameObject that has the Text or TextMeshPro component (e.g. your Message object).")]
     public GameObject messageObject;
     public Image bubbleImage;
 
@@ -57,7 +56,7 @@ public class SpeechBubble : MonoBehaviour
 
         var type = tmp.GetType();
         type.GetProperty("text")?.SetValue(tmp, text);
-        // Ensure layout/mesh refresh when advancing dialogue (TMP can skip redraw if only text changes in edge cases).
+        
         type.GetMethod("SetAllDirty", BindingFlags.Instance | BindingFlags.Public)?.Invoke(tmp, null);
         type.GetMethod("ForceMeshUpdate", Type.EmptyTypes)?.Invoke(tmp, null);
     }

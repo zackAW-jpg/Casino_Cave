@@ -21,11 +21,9 @@ public class DungeonRoomController : MonoBehaviour
     public Transform spawnWest;
 
     [Header("Start room (0,0) only")]
-    [Tooltip("Dungeon entrance decoration (child object on the Room prefab). Edit that object’s Transform / SpriteRenderer in the prefab to move, scale, flip, or change sorting. Shown only in the starting room.")]
     public SpriteRenderer dungeonFrontDoor;
 
     [Header("Door graphics (optional)")]
-    [Tooltip("Sprites for each direction on active doors. If set, overrides the Sprite on each Door’s DoorGraphic child. Leave all empty to use sprites you assigned only on those DoorGraphic objects in the Room prefab.")]
     public Sprite doorGraphicNorth;
     public Sprite doorGraphicEast;
     public Sprite doorGraphicSouth;
@@ -62,7 +60,6 @@ public class DungeonRoomController : MonoBehaviour
             door.ConfigureVisuals(roomSprite);
     }
 
-
     public Transform GetSpawnForSide(DoorDirection side)
     {
         switch (side)
@@ -75,7 +72,7 @@ public class DungeonRoomController : MonoBehaviour
         }
     }
 
-    /// <returns>True if the player was moved to a new room.</returns>
+    
     public bool TryMoveToAdjacentRoom(DoorDirection direction)
     {
         if (dungeonState == null)
@@ -123,7 +120,6 @@ public class DungeonRoomController : MonoBehaviour
             default: return Vector2Int.zero;
         }
     }
-
 
     private void MovePlayerToSpawnInNewRoom(DoorDirection enteredFromDirection, DungeonRoomController targetRoom)
     {

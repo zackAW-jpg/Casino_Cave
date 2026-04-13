@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Central place to add/remove slot outcomes. Rolls pick uniformly from these lists.
-/// </summary>
 public static class GamblingArmDefinitions
 {
     public static readonly IReadOnlyList<GamblingAttackType> AttackTypes = new[]
@@ -37,7 +34,7 @@ public static class GamblingArmDefinitions
 
     public static GamblingAttackType RandomCritSymbol()
     {
-        // Right slot uses same symbol set as left; equal chance each.
+        
         return RandomAttackType();
     }
 }

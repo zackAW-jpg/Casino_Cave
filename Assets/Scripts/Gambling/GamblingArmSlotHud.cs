@@ -2,36 +2,25 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Bottom-left slot HUD: three <see cref="Image"/> reels show random symbols quickly, then lock in order: left → middle → right.
-/// Anchor the root <see cref="RectTransform"/> to bottom-left on your Canvas. Assign sprite strips in enum order (tooltips).
-/// </summary>
 public class GamblingArmSlotHud : MonoBehaviour
 {
     [Header("Reels (left → right)")]
-    [Tooltip("Leave Source Image empty on each Image — sprites are assigned from the arrays below at runtime.")]
     public Image reelLeft;
     public Image reelMiddle;
     public Image reelRight;
 
     [Header("Symbol strips (enum order)")]
-    [Tooltip("Sprites for GamblingAttackType: Punch, ShurikenThrow, ExtendedPunch, HammerSlam.")]
     public Sprite[] outerReelSprites;
-
-    [Tooltip("Sprites for GamblingModifierType: Mushroom, Fire, Ice, Paddle, Gold.")]
     public Sprite[] middleReelSprites;
 
     [Header("Draw order (UI)")]
-    [Tooltip("Optional: the slot frame / machine graphic. Must share the same parent as the reel Images. Renders behind symbols.")]
     public RectTransform slotMachineBackground;
 
     [Header("Display")]
-    [Tooltip("Target longest side of a symbol in **parent** space after fitting. Uses scale (not only sizeDelta) so stretched anchors / scaled parents still look correct. 0 = default 72.")]
     [Range(16f, 256f)]
     public float maxReelSymbolSize = 72f;
 
     [Header("Timing")]
-    [Tooltip("How often symbols change while a reel is still spinning.")]
     public float spinTickSeconds = 0.04f;
 
     [Header("Slam")]
@@ -39,13 +28,8 @@ public class GamblingArmSlotHud : MonoBehaviour
     public float slamDurationSeconds = 0.08f;
 
     [Header("Audio (optional)")]
-    [Tooltip("Short tick while reels are spinning (plays on each spin step).")]
     public AudioClip reelSpinTickSound;
-
-    [Tooltip("When each reel locks: [0]=left attack reel, [1]=middle modifier reel, [2]=right crit reel. Null entries are skipped.")]
     public AudioClip[] reelStopSoundsPerSlot = new AudioClip[3];
-
-    [Tooltip("Final ding when all three reels are locked and the roll is ready.")]
     public AudioClip rollCompleteSound;
     public AudioSource audioSource;
 
@@ -55,9 +39,9 @@ public class GamblingArmSlotHud : MonoBehaviour
         DisableRaycastTargetsOnReels();
     }
 
-    /// <summary>
-    /// Reels do not need hit-testing; blocking raycasts can steal keyboard/mouse from gameplay dialogue.
-    /// </summary>
+    
+    
+    
     private void DisableRaycastTargetsOnReels()
     {
         if (reelLeft != null) reelLeft.raycastTarget = false;
@@ -72,9 +56,9 @@ public class GamblingArmSlotHud : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Unity UI draws later siblings on top. If the frame is listed after the reels, it covers them — we send reels last.
-    /// </summary>
+    
+    
+    
     private void FixSiblingDrawOrder()
     {
         Transform parent = null;
@@ -233,9 +217,9 @@ public class GamblingArmSlotHud : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// sizeDelta alone is wrong when anchors are stretched or parents are scaled. We SetNativeSize then apply uniform localScale so the drawn size matches <see cref="maxReelSymbolSize"/>.
-    /// </summary>
+    
+    
+    
     private void ApplyFittedSpriteSize(Image img, Sprite s)
     {
         if (img == null || s == null)
@@ -253,14 +237,7 @@ public class GamblingArmSlotHud : MonoBehaviour
         if (maxDim < 0.01f)
             return;
 
-        float parentScale = 1f;
-        if (rt.parent != null)
-        {
-            Vector3 ls = rt.parent.lossyScale;
-            parentScale = Mathf.Max(Mathf.Abs(ls.x), Mathf.Abs(ls.y), 0.0001f);
-        }
-
-        float uniform = targetMax / (maxDim * parentScale);
+        float uniform = targetMax / maxDim;
         uniform = Mathf.Clamp(uniform, 0.001f, 4f);
         rt.localScale = new Vector3(uniform, uniform, 1f);
     }

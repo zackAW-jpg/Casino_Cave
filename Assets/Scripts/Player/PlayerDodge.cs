@@ -1,10 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>
-/// Space to dodge in the current move direction; direction is locked for the whole dodge.
-/// Invulnerability applies only during the middle segment (normalized time window).
-/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerDodge : MonoBehaviour
 {
@@ -104,7 +100,7 @@ public class PlayerDodge : MonoBehaviour
         _rb.linearVelocity = Vector2.zero;
     }
 
-    /// <summary>Interrupted by a hit outside i-frames; still applies cooldown.</summary>
+    
     public void CancelDodge()
     {
         if (!_dodging)

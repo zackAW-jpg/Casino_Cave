@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Forwards crit shake to <see cref="CameraFollow2D"/> on the same GameObject. Keeps existing Instance.Shake() calls working.
-/// </summary>
 public class CameraShake : MonoBehaviour
 {
     public static CameraShake Instance { get; private set; }

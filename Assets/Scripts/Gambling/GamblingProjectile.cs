@@ -1,6 +1,5 @@
 using UnityEngine;
 
-/// <summary>Shuriken / boxing glove gambling projectiles. Player-tagged collider ignored.</summary>
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class GamblingProjectile : MonoBehaviour
@@ -19,7 +18,6 @@ public class GamblingProjectile : MonoBehaviour
     public float lifeTime = 4f;
 
     [Header("Walls")]
-    [Tooltip("Spawned at wall contact when this projectile is destroyed by a RoomWall.")]
     public GameObject wallBreakVfxPrefab;
 
     public void Initialize(
@@ -49,7 +47,7 @@ public class GamblingProjectile : MonoBehaviour
         _arm = arm;
         _vfx = vfx;
 
-        // Uniform tuning so huge prefab import scales don't dominate; mushroom stacks on top.
+        
         transform.localScale = transform.localScale * visualScaleTuning * scaleMul;
 
         if (modifier == GamblingModifierType.Fire)

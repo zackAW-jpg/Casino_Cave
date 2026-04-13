@@ -20,9 +20,7 @@ public class DungeonBootstrap : MonoBehaviour
     public GameplayMenusController gameplayMenus;
 
     [Header("Dungeon music (optional)")]
-    [Tooltip("Main looping soundtrack during a run (starts when the dungeon finishes loading).")]
     public AudioClip dungeonMusicLoop;
-    [Tooltip("Optional second layer (cave wind, etc.) under the main track.")]
     public AudioClip dungeonAmbientBedLoop;
     [Range(0f, 1f)] public float dungeonMusicVolume = 0.5f;
     [Range(0f, 1f)] public float dungeonAmbientVolume = 0.35f;
@@ -163,9 +161,9 @@ public class DungeonBootstrap : MonoBehaviour
         _playerState = _playerHealth != null ? _playerHealth.state : null;
     }
 
-    /// <summary>
-    /// New procedural dungeon: full HP, chips 0, potions reset. Used by death retry, victory replay, and pause restart.
-    /// </summary>
+    
+    
+    
     public void RegenerateFreshDungeonRun()
     {
         StartCoroutine(CoRegenerateFreshDungeonRun());

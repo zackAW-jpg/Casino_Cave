@@ -11,8 +11,6 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
     public Key advanceKey = Key.E;
     public Key yesKey = Key.Y;
     public Key noKey = Key.N;
-
-    [Tooltip("Extra text shown after the last line, while waiting for Yes/No.")]
     [TextArea(2, 4)]
     public string yesNoPromptSuffix = "\n\n[Y] Yes    [N] No";
 
@@ -20,9 +18,7 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
     public float postChoiceHideSeconds = 0.8f;
 
     [Header("Audio (optional)")]
-    [Tooltip("NPC talk blip when advancing between lines (not when opening the Yes/No prompt).")]
     public AudioClip advanceLineSound;
-    [Tooltip("If set, uses PlayOneShot; otherwise plays at this NPC's position.")]
     public AudioSource audioSource;
 
     private Collider2D _col;
@@ -138,7 +134,7 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
         if (lines == null || lines.Length == 0)
             yield break;
 
-        // Multi-line dialogue
+        
         for (int i = 0; i < lines.Length; i++)
         {
             if (!IsInRange()) yield break;
@@ -146,7 +142,7 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
             if (speechBubble != null)
                 speechBubble.Show(lines[i]);
 
-            // Wait for "next dialogue box"
+            
             while (IsInRange() && !WasAdvancePressed())
                 yield return null;
 
@@ -156,7 +152,7 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
                 PlayAdvanceLineSound();
         }
 
-        // Deal decision
+        
         if (!IsInRange()) yield break;
 
         string lastLine = lines[lines.Length - 1];
@@ -196,7 +192,6 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
     }
 }
 
-// Implement this on the NPC (Matilda for now).
 public interface INpcDealDialogueHandler
 {
     string[] GetDialogueLines();

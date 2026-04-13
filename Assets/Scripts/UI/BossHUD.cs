@@ -2,18 +2,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Boss HP bar (anchored in the scene — e.g. bottom area, offset right of the player HUD).
-/// Call <see cref="Bind"/> when a boss spawns; hides on boss death.
-/// Reuses the same fill-Image pattern as <see cref="PlayerHUD"/>.
-/// </summary>
 public class BossHUD : MonoBehaviour
 {
     [Header("UI")]
     public Image hpFillImage;
-    [Tooltip("Optional. Name is taken from BossHealth.displayName (e.g. \"The Awakened One\"). Place to the left of the bar.")]
     public TextMeshProUGUI bossNameText;
-    [Tooltip("Optional extra root under this object (e.g. HPBar). Bind always enables this component's GameObject first so a disabled parent does not hide the bar.")]
     public GameObject hudRoot;
 
     [Header("Fill smoothing")]
@@ -33,7 +26,7 @@ public class BossHUD : MonoBehaviour
         hpFillImage.fillAmount = Mathf.Clamp01(_displayedHp / _boss.maxHP);
     }
 
-    /// <summary>Wire this boss to the bar and show the HUD.</summary>
+    
     public void Bind(BossHealth boss)
     {
         Unbind();
@@ -51,7 +44,7 @@ public class BossHUD : MonoBehaviour
         ApplyImmediate();
         ApplyBossName();
 
-        // Parent must be active or children stay hidden even if hudRoot.SetActive(true) is called.
+        
         gameObject.SetActive(true);
         if (hudRoot != null)
             hudRoot.SetActive(true);

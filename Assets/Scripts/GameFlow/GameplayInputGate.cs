@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Central flags so movement, combat, pause, and beacon prompts do not fight each other.
-/// </summary>
 public static class GameplayInputGate
 {
     public static bool DungeonBootComplete { get; private set; }
@@ -12,7 +9,7 @@ public static class GameplayInputGate
     public static bool PlayerWorldActionsEnabled =>
         DungeonBootComplete && MenuModalDepth == 0 && !_pauseMenuOpen;
 
-    /// <summary>Esc is allowed when boot finished and no modal overlays (death, intro, victory, leave prompt).</summary>
+    
     public static bool CanTogglePause =>
         DungeonBootComplete && MenuModalDepth == 0;
 

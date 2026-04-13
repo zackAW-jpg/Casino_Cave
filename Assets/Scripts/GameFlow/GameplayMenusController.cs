@@ -5,10 +5,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-/// <summary>
-/// In-game UI: intro, pause (Esc), death, victory, and cave exit prompt. Assign panel roots and optional
-/// full-screen <see cref="Image"/> backgrounds per screen in the Inspector.
-/// </summary>
 [DisallowMultipleComponent]
 public class GameplayMenusController : MonoBehaviour
 {
@@ -57,7 +53,6 @@ public class GameplayMenusController : MonoBehaviour
     public TextMeshProUGUI leaveCaveBody;
 
     [Header("Audio (optional)")]
-    [Tooltip("Short sting when the dungeon is cleared (plays when the player confirms leaving the cave).")]
     public AudioClip dungeonCompleteSound;
     public AudioSource uiAudioSource;
 
@@ -149,7 +144,7 @@ public class GameplayMenusController : MonoBehaviour
             if (introBody != null)
                 introBody.text = introLines[i];
             yield return WaitForIntroAdvance();
-            // Same physical press can still be "wasPressedThisFrame" when the next wait starts; require release first.
+            
             if (i < introLines.Length - 1)
                 yield return WaitUntilIntroAdvanceReleased();
         }

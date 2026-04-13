@@ -1,23 +1,13 @@
 using UnityEngine;
 
-/// <summary>
-/// Visual-only dialogue poses: either swap sprites on one <see cref="SpriteRenderer"/> (<see cref="spritesPerStep"/>)
-/// or toggle child <see cref="poseLayers"/>. Called from <see cref="NpcMultiLineDialogueTrigger"/>.
-/// </summary>
 public class NpcDialogueSpriteLayers : MonoBehaviour
 {
     [Header("Option A: one SpriteRenderer, swap sprite per line")]
-    [Tooltip("If empty, GetComponent<SpriteRenderer>() on this GameObject is used.")]
     public SpriteRenderer spriteRenderer;
-
-    [Tooltip("Index matches dialogue line index. Leave entries null to keep previous sprite.")]
     public Sprite[] spritesPerStep;
 
     [Header("Option B: stacked child objects (one pose per line)")]
-    [Tooltip("Child GameObjects in order: index 0 = first dialogue line. Same world position; only one active.")]
     public GameObject[] poseLayers;
-
-    [Tooltip("When dialogue ends or is cancelled, show only layer 0. If false, all layers are hidden.")]
     public bool showFirstLayerWhenDialogueEnds = true;
 
     private bool UsesSpriteSwap => spritesPerStep != null && spritesPerStep.Length > 0;
@@ -28,7 +18,7 @@ public class NpcDialogueSpriteLayers : MonoBehaviour
             spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    /// <summary>Activates one pose; index is clamped if there are fewer sprites/layers than dialogue lines.</summary>
+    
     public void SetStep(int stepIndex)
     {
         if (UsesSpriteSwap)

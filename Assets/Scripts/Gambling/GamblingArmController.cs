@@ -3,10 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-/// <summary>
-/// Slot roll → ready → left-click attack → (after attack duration) roll again.
-/// Optional bottom-left <see cref="GamblingArmSlotHud"/> during Rolling; wire projectiles/VFX on this object.
-/// </summary>
 [DisallowMultipleComponent]
 public class GamblingArmController : MonoBehaviour
 {
@@ -19,9 +15,7 @@ public class GamblingArmController : MonoBehaviour
 
     [Header("Timing")]
     public float rollDurationSeconds = 1f;
-    [Tooltip("Minimum seconds between one left-click attack commit and the next. Ignores spam clicks in Ready.")]
     public float minSecondsBetweenAttacks = 1f;
-    [Tooltip("Placeholder until real attack animations exist.")]
     public float punchAttackDuration = 0.28f;
     public float shurikenAttackDuration = 0.22f;
     public float gloveAttackDuration = 0.32f;
@@ -39,9 +33,7 @@ public class GamblingArmController : MonoBehaviour
     public float hammerShockwaveRadius = 1.8f;
     public float shurikenSpreadDegrees = 22f;
     public float projectileKnockback = 5f;
-    [Tooltip("World speed for shuriken / glove projectiles (Rigidbody2D.linearVelocity).")]
     public float projectileSpeed = 14f;
-    [Tooltip("Multiplies prefab scale so large sprites/PPU don't look huge. Set to 1 if your prefab is already sized.")]
     [Range(0.05f, 2f)] public float projectileVisualScaleTuning = 0.35f;
 
     [Header("Mushroom modifier")]
@@ -49,7 +41,6 @@ public class GamblingArmController : MonoBehaviour
     public float mushroomProjectileScaleMul = 1.45f;
 
     [Header("Crit")]
-    [Tooltip("Multiplies base damage when left and right slot symbols match.")]
     public float critDamageMultiplier = 2f;
 
     [Header("Paddle modifier")]
@@ -60,36 +51,26 @@ public class GamblingArmController : MonoBehaviour
     public GameObject gloveProjectilePrefab;
 
     [Header("Prefabs — ice variants (optional)")]
-    [Tooltip("When the middle slot is Ice, this prefab is used for shurikens instead of Shuriken Prefab.")]
     public GameObject iceShurikenPrefab;
-    [Tooltip("When the middle slot is Ice, this prefab is used for the glove shot instead of Glove Projectile Prefab.")]
     public GameObject iceGlovePrefab;
 
     [Header("Prefabs — loot")]
-    [Tooltip("Dropped at enemy when Gold modifier hits.")]
     public GameObject goldCoinPrefab;
 
     [Header("Layers")]
     public LayerMask hitLayers = ~0;
 
     [Header("Roll UI")]
-    [Tooltip("Optional: bottom-left slot Images — random spin then lock during Rolling. If null, only waits roll duration.")]
     [FormerlySerializedAs("rollDisplay")]
     public GamblingArmSlotHud slotHud;
 
     [Header("Audio — gambling attacks (optional)")]
     public AudioSource sfxSource;
-    [Tooltip("When middle slot is Fire (stacked with attack SFX below).")]
     public AudioClip fireAttackSound;
-    [Tooltip("When middle slot is Ice.")]
     public AudioClip iceAttackSound;
-    [Tooltip("Boxing glove / extended punch attack.")]
     public AudioClip boxingGlovePunchSound;
-    [Tooltip("Shuriken throw.")]
     public AudioClip shurikenWhooshSound;
-    [Tooltip("Melee punch whoosh.")]
     public AudioClip meleeWhooshSound;
-    [Tooltip("Player hammer shockwave — assign up to 5 variants; one is chosen at random each slam.")]
     public AudioClip[] hammerSlamVariantSounds = new AudioClip[5];
 
     public Phase CurrentPhase { get; private set; } = Phase.Rolling;
@@ -177,7 +158,7 @@ public class GamblingArmController : MonoBehaviour
         }
     }
 
-    /// <summary>Waits one frame so NPC dialogue / UI do not eat the same input as unlock.</summary>
+    
     private void TryScheduleDeferredRollStart()
     {
         if (!GamblingArmRuntimeState.SlotsUnlocked || !isActiveAndEnabled)
@@ -294,7 +275,7 @@ public class GamblingArmController : MonoBehaviour
         }
     }
 
-    /// <summary>Called by gambling projectiles when they damage an enemy. Triggers one crit screen shake.</summary>
+    
     public void NotifyAttackHitEnemy(bool projectileWasCritRoll)
     {
         if (!projectileWasCritRoll || _critShakePlayedThisAttack)
@@ -311,7 +292,7 @@ public class GamblingArmController : MonoBehaviour
             CameraShake.Instance.Shake();
     }
 
-    /// <summary>Returns true if any valid target was hit (for crit shake fallback on melee).</summary>
+    
     private bool ExecuteAttack(GamblingArmRollResult r)
     {
         PlayGamblingAttackAudio(r);
@@ -569,7 +550,7 @@ public class GamblingArmController : MonoBehaviour
         return new Vector2(c * v.x - s * v.y, s * v.x + c * v.y);
     }
 
-    /// <summary>When present, coin gun is disabled — gambling arm owns primary fire (only after slots unlock).</summary>
+    
     public bool BlocksCoinGun => enabled && GamblingArmRuntimeState.SlotsUnlocked;
 
     private void OnGUI()

@@ -7,9 +7,6 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// One-shot scene wiring for the meta loop (menus, save bootstrap, beacon prefab, build settings).
-/// </summary>
 public static class CasinoCaveFlowMenuItems
 {
     const string MainMenuPath = "Assets/Scenes/MainMenu.unity";

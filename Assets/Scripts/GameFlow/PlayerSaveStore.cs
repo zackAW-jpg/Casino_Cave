@@ -40,9 +40,6 @@ public class RoomSaveDto
     public int dist;
 }
 
-/// <summary>
-/// Single-slot JSON save under <see cref="Application.persistentDataPath"/>.
-/// </summary>
 public static class PlayerSaveStore
 {
     const string FileName = "casino_cave_save_slot.json";
@@ -51,7 +48,7 @@ public static class PlayerSaveStore
 
     public static bool HasSaveFileOnDisk => File.Exists(FilePath);
 
-    /// <summary>Last loaded DTO for placement after rebuild (Continue).</summary>
+    
     public static Vector3 LastLoadedPlayerPosition { get; private set; }
 
     public static bool TryLoad(out PlayerSaveDto dto)

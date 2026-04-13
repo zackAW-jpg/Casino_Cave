@@ -1,11 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Boss AI with two telegraphed moves:
-/// 1) Ground slam: short jump telegraph, then slam hit on landing.
-/// 2) Charge: lock player position, wind up, then dash to that locked point.
-/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class BossController : MonoBehaviour
 {
@@ -16,73 +11,55 @@ public class BossController : MonoBehaviour
     public BossHealth bossHealth;
 
     [Header("Room gating (set by DungeonRoomSpawner)")]
-    [Tooltip("Same asset as on the spawner; used like SecurityGuard to know when the player is in this room.")]
     public DungeonStateSO dungeonState;
     public Vector2Int roomCoord;
-    [Tooltip("After the player enters the boss room, wait this long before movement and attacks.")]
     public float roomEngageDelaySeconds = 0.2f;
-    [Tooltip("HUD binds when the player enters this boss room; unbinds when they leave or the boss dies.")]
     public BossHUD bossHUD;
 
     [Header("Movement")]
     public float moveSpeed = 2.2f;
-    [Tooltip("Stop approaching when within this distance of the player.")]
     public float stopDistanceFromPlayer = 1.2f;
 
     [Header("Ground Slam")]
     public float slamTriggerDistance = 4f;
-    [Tooltip("Time spent in the jump telegraph before landing.")]
     public float slamJumpTelegraph = 0.55f;
     public float slamCooldown = 4.2f;
     public float shockwaveRadius = 2.75f;
     public int slamDamage = 5;
     public float slamKnockbackForce = 10f;
-    [Tooltip("Layer mask for slam hit test (default: everything).")]
     public LayerMask slamHitMask = ~0;
     [Header("Ground Slam VFX")]
     public GameObject slamTakeoffVfxPrefab;
     public GameObject slamLandVfxPrefab;
-    [Tooltip("Optional spawn point for slam VFX. Uses boss position if null.")]
     public Transform slamVfxSpawnPoint;
 
     [Header("Charge")]
-    [Tooltip("How long the boss pauses while charging up.")]
     public float chargeWindup = 0.45f;
     public float chargeSpeed = 11f;
     public float chargeStopDistance = 0.12f;
     public float chargeCooldown = 3.6f;
-    [Tooltip("After locking player position, continue this many units beyond it.")]
     public float chargeOvershootDistance = 5f;
     public int chargeDamage = 4;
-    [Tooltip("Hit radius sampled while dashing.")]
     public float chargeHitRadius = 0.7f;
-    [Tooltip("Layer mask for charge hit test (default: everything).")]
     public LayerMask chargeHitMask = ~0;
-    [Tooltip("Layers to query while charging. Wall stopping uses RoomWall component checks.")]
     public LayerMask chargeWallMask = ~0;
 
     [Header("Room bounds")]
-    [Tooltip("Shrinks the walkable box further inward so the sprite/body does not hang over wall visuals.")]
     public float roomBoundsExtraInset = 0.35f;
 
     [Header("Attack cadence")]
-    [Tooltip("Minimum time gap between any two attacks.")]
     public float minTimeBetweenAttacks = 1.5f;
 
     [Header("Optional sound cues")]
     public AudioSource audioSource;
     public AudioClip slamTakeoffSfx;
-    [Tooltip("Used when Slam Land Variants is empty.")]
     public AudioClip slamLandSfx;
-    [Tooltip("Up to 5 different slam impacts; one is chosen at random. If empty, Slam Land Sfx is used.")]
     public AudioClip[] slamLandVariantSfx = new AudioClip[5];
     public AudioClip chargeWindupSfx;
-    [Tooltip("Boss rush / dash starts (charge begins moving).")]
     public AudioClip chargeStartSfx;
     public AudioClip chargeWallCancelSfx;
 
     [Header("Boss idle vocals (optional)")]
-    [Tooltip("Random one-shots while the player is in the boss room and the boss is not attacking.")]
     public AudioClip[] bossIdleNoiseSounds;
     public float bossIdleNoiseMinInterval = 5f;
     public float bossIdleNoiseMaxInterval = 12f;
@@ -93,11 +70,8 @@ public class BossController : MonoBehaviour
     public string slamLandTrigger = "SlamLand";
     public string chargeWindupTrigger = "ChargeWindup";
     public string chargeStartTrigger = "ChargeStart";
-    [Tooltip("Fallback squash/stretch when no animator trigger is wired.")]
     public bool useFallbackScaleAnimation = true;
-    [Tooltip("First telegraph pose (bigger) before jump.")]
     public Vector3 slamJumpScale = new Vector3(1.12f, 1.12f, 1f);
-    [Tooltip("Second telegraph pose (smaller) to sell airborne/jump feel.")]
     public Vector3 slamAirScale = new Vector3(0.9f, 0.9f, 1f);
     public Vector3 chargeWindupScale = new Vector3(1.15f, 0.9f, 1f);
 
@@ -123,7 +97,7 @@ public class BossController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _rb.bodyType = RigidbodyType2D.Kinematic;
-        // Critical: kinematic bodies must use full contacts to be blocked by static wall colliders.
+        
         _rb.useFullKinematicContacts = true;
         _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         _baseScale = transform.localScale;
@@ -236,7 +210,7 @@ public class BossController : MonoBehaviour
         bool canSlam = playerNearby && Time.time >= _nextSlamTime && cadenceReady;
         bool canCharge = Time.time >= _nextChargeTime && cadenceReady;
 
-        // Default to charge; if nearby, slam takes priority.
+        
         if (canSlam)
         {
             StartCoroutine(SlamRoutine());
@@ -319,7 +293,7 @@ public class BossController : MonoBehaviour
                 firstHitRb = c.attachedRigidbody;
             if (firstHitPos == Vector2.zero)
                 firstHitPos = c.bounds.center;
-            break; // Single hit for this slam.
+            break; 
         }
 
         if (hitPlayer && firstHitRb != null)
@@ -568,7 +542,7 @@ public class BossController : MonoBehaviour
             return true;
         }
 
-        // Fallback guard: if already overlapping a room wall, don't advance.
+        
         ContactFilter2D overlapFilter = new ContactFilter2D
         {
             useLayerMask = true,

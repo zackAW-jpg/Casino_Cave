@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Lets <see cref="DungeonBootstrap"/> hydrate the save before <see cref="PlayerHealth.Awake"/> runs default init.
-/// </summary>
 public static class ContinueLoadGuard
 {
     static bool _pendingSkipPlayerHealthInit;

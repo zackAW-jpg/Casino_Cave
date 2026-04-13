@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Wired at dungeon boot so room transitions and pickups can autosave without inspector chains.
-/// </summary>
 public static class GameplaySaveContext
 {
     public static DungeonStateSO Dungeon;

@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Walkable interior from <see cref="RoomWall"/> colliders under a room root (e.g. DungeonRoomController transform).
-/// </summary>
 public static class RoomInteriorBounds
 {
     public static bool TryCompute(Transform roomRoot, out Bounds worldBounds)
@@ -37,8 +34,8 @@ public static class RoomInteriorBounds
         if (!hasAny)
             return false;
 
-        // Build true interior from the walls' inner faces (not outer envelope),
-        // so entities cannot get wedged inside wall thickness.
+        
+        
         float roomCx = envelope.center.x;
         float roomCy = envelope.center.y;
         float leftInner = float.NegativeInfinity;
@@ -91,7 +88,7 @@ public static class RoomInteriorBounds
             return true;
         }
 
-        // Fallback: if wall orientation detection fails, keep previous behavior.
+        
         worldBounds = envelope;
         return true;
     }

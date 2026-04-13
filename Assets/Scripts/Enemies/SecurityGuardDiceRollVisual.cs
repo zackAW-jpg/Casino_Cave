@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Cycles through 16 dice sprites while moving; rotates so the roll reads along travel direction.
-/// Runs in LateUpdate (after <see cref="SecurityGuard"/>) so facing uses the current frame's chase direction.
-/// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
 [DefaultExecutionOrder(50)]
@@ -11,39 +7,21 @@ public class SecurityGuardDiceRollVisual : MonoBehaviour
 {
     public enum DiceRollFacingBasis
     {
-        [Tooltip("World movement along texture +X. Tall edge-on frames stay vertical on screen when moving horizontally (often looks “sideways”).")]
         VelocityAlongSpriteRight = 0,
-        [Tooltip("World movement along texture +Y. Edge-on / stacked frames lie along the path (roll toward target).")]
         VelocityAlongSpriteUp = 1,
-        [Tooltip("World movement along texture -Y.")]
         VelocityAlongSpriteDown = 2,
-        [Tooltip("World movement along texture -X.")]
         VelocityAlongSpriteLeft = 3,
     }
 
     const int FrameCount = 16;
-
-    [Tooltip("Sprites in strict roll order (one full loop = one tumble cycle).")]
     [SerializeField] Sprite[] rollFrames = new Sprite[FrameCount];
 
     [SerializeField] Rigidbody2D rb;
-
-    [Tooltip("How many full 16-frame cycles per second while moving.")]
     [SerializeField] float rollCyclesPerSecond = 2f;
-
-    [Tooltip("Speeds below this hold the last frame and facing.")]
     [SerializeField] float moveThreshold = 0.08f;
-
-    [Tooltip("Use VelocityAlongSpriteUp for tall edge-on dice art so the stack lies along the path.")]
     [SerializeField] DiceRollFacingBasis facingBasis = DiceRollFacingBasis.VelocityAlongSpriteUp;
-
-    [Tooltip("Extra degrees after basis (small nudge only).")]
     [SerializeField] float facingFineTuneDegrees = 0f;
-
-    [Tooltip("Constant Z rotation applied on top of facing. Same effect as batch-rotating every dice PNG by this amount in your art tool (try ±90 if the roll axis was exported sideways).")]
     [SerializeField] float spriteArtRotationDegrees = 0f;
-
-    [Tooltip("Play frames 15→0 while moving if the export order is opposite to forward travel.")]
     [SerializeField] bool invertRollFrameOrder = true;
 
     SpriteRenderer _sr;

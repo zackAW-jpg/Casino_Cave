@@ -1,8 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Place in the boss room (spawner assigns when the boss is defeated). Uses a trigger collider on the Player.
-/// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class CaveExitBeacon : MonoBehaviour
 {

@@ -1,18 +1,12 @@
 using UnityEngine;
 
-/// <summary>
-/// Main looping bed (e.g. soundtrack). Optional second layer for ambient loop on the same GameObject.
-/// Put one instance in Main Menu (music) and one in Dungeon (ambient + music, or music only).
-/// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class BackgroundMusic : MonoBehaviour
 {
-    [Tooltip("Primary loop — e.g. dungeon soundtrack or title theme.")]
     public AudioClip clip;
     [Range(0f, 1f)] public float volume = 0.5f;
 
     [Header("Optional second layer (ambient bed)")]
-    [Tooltip("Separate loop under the main track (cave ambience, wind, etc.).")]
     public AudioClip ambientBedClip;
     [Range(0f, 1f)] public float ambientVolume = 0.35f;
 

@@ -1,9 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Smooth follow + additive crit shake. Shake is applied on top of follow so it never snaps to an old Awake position.
-/// </summary>
 public class CameraFollow2D : MonoBehaviour
 {
     public static CameraFollow2D Instance { get; private set; }
@@ -53,7 +50,7 @@ public class CameraFollow2D : MonoBehaviour
         transform.position = _followPos + _shakeOffset;
     }
 
-    /// <summary>Adds a short positional shake without fighting SmoothDamp toward the player.</summary>
+    
     public void PlayCritShake()
     {
         if (_shakeRoutine != null)

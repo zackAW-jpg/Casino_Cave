@@ -1,16 +1,12 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// Boss HP (separate from generic <see cref="Health"/>). Drives <see cref="BossHUD"/> via events.
-/// </summary>
 public class BossHealth : MonoBehaviour
 {
     public int maxHP = 40;
     public int currentHP;
 
     [Header("UI")]
-    [Tooltip("Shown in the boss HUD next to the health bar.")]
     public string displayName = "The Awakened One";
 
     [Header("Audio (optional)")]
@@ -19,7 +15,6 @@ public class BossHealth : MonoBehaviour
     public AudioClip deathSound;
 
     [Header("Loot on death")]
-    [Tooltip("If set, this many coins spawn in a ring when the boss dies (often assigned by DungeonRoomSpawner).")]
     public GameObject coinPrefab;
     public int coinsOnDeath = 15;
     public float coinSpawnRadius = 2.5f;

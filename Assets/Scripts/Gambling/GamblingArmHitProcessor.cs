@@ -1,6 +1,5 @@
 using UnityEngine;
 
-/// <summary>Fire / ice / gold after main damage is applied (projectiles and melee).</summary>
 public static class GamblingArmHitProcessor
 {
     public const float CinderDelaySeconds = 1f;

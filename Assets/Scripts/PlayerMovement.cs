@@ -11,13 +11,13 @@ public class PlayerMovement : MonoBehaviour
     private PlayerControls controls;
     private PlayerDodge _dodge;
 
-    /// <summary>Last facing used for dodge when there is no movement input this frame.</summary>
+    
     public Vector2 LastNonZeroMoveDir { get; private set; } = Vector2.down;
 
-    /// <summary>Input read this frame (after Update read).</summary>
+    
     public Vector2 CurrentMoveInput => moveInput;
 
-    /// <summary>Input from the previous frame (for directional sprite / diagonal rules).</summary>
+    
     public Vector2 PreviousFrameMoveInput { get; private set; }
 
     void Awake()
@@ -39,9 +39,9 @@ public class PlayerMovement : MonoBehaviour
         controls.Disable();
     }
 
-    /// <summary>
-    /// Called by PlayerHealth via SendMessage when the player takes damage, so we don't overwrite velocity for a moment.
-    /// </summary>
+    
+    
+    
     public void OnKnockbackReceived()
     {
         _knockbackTimer = 0.2f;

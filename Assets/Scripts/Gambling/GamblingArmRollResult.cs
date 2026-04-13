@@ -1,9 +1,9 @@
-/// <summary>Outcome of one full slot machine roll.</summary>
+
 public struct GamblingArmRollResult
 {
     public GamblingAttackType Attack;
     public GamblingModifierType Modifier;
-    /// <summary>Right-slot symbol (same enum as attack). Crit if it matches <see cref="Attack"/>.</summary>
+    
     public GamblingAttackType CritSymbol;
     public bool IsCrit;
 
