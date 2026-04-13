@@ -29,6 +29,7 @@ public class GamblingArmSlotHud : MonoBehaviour
 
     [Header("Audio (optional)")]
     public AudioClip reelSpinTickSound;
+    [Range(0.1f, 2f)] public float reelSpinTickVolumeScale = 1.35f;
     public AudioClip[] reelStopSoundsPerSlot = new AudioClip[3];
     public AudioClip rollCompleteSound;
     public AudioSource audioSource;
@@ -275,10 +276,11 @@ public class GamblingArmSlotHud : MonoBehaviour
     {
         if (reelSpinTickSound == null)
             return;
+        float v = Mathf.Clamp(reelSpinTickVolumeScale, 0.1f, 2f);
         if (audioSource != null)
-            audioSource.PlayOneShot(reelSpinTickSound);
+            audioSource.PlayOneShot(reelSpinTickSound, v);
         else
-            AudioSource.PlayClipAtPoint(reelSpinTickSound, transform.position, 1f);
+            AudioSource.PlayClipAtPoint(reelSpinTickSound, transform.position, v);
     }
 
     void PlayReelStopSound(int slotIndex)

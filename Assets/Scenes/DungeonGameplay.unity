@@ -2115,7 +2115,7 @@ MonoBehaviour:
   gameplayMenus: {fileID: 943261317}
   dungeonMusicLoop: {fileID: 8300000, guid: 1f4f1bc73dc4a4641a1a94da736dc4ed, type: 3}
   dungeonAmbientBedLoop: {fileID: 0}
-  dungeonMusicVolume: 0.5
+  dungeonMusicVolume: 0.1
   dungeonAmbientVolume: 0.35
 --- !u!4 &734660681
 Transform:
@@ -6659,12 +6659,12 @@ MonoBehaviour:
   spinTickSeconds: 0.04
   slamScale: 1.12
   slamDurationSeconds: 0.08
-  reelSpinTickSound: {fileID: 0}
+  reelSpinTickSound: {fileID: 8300000, guid: 101de0eae45ca3a49ab19dcd8276e473, type: 3}
   reelStopSoundsPerSlot:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  rollCompleteSound: {fileID: 0}
+  - {fileID: 8300000, guid: 101de0eae45ca3a49ab19dcd8276e473, type: 3}
+  - {fileID: 8300000, guid: 101de0eae45ca3a49ab19dcd8276e473, type: 3}
+  - {fileID: 8300000, guid: 101de0eae45ca3a49ab19dcd8276e473, type: 3}
+  rollCompleteSound: {fileID: 8300000, guid: 9c320111b43879e469ebcd17c9854a66, type: 3}
   audioSource: {fileID: 0}
 --- !u!1 &2088222566 stripped
 GameObject:
