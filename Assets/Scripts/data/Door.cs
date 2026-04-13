@@ -1,8 +1,9 @@
 using UnityEngine;
 
 /// <summary>
-/// Trigger transition to the adjacent room. Optionally spawns two sprites at the door jambs
-/// (both sides of the opening) when <see cref="iconSprite"/> is set.
+/// Trigger transition to the adjacent room. Visuals: optional door sprite from
+/// <see cref="DungeonRoomController"/> on a child <see cref="doorGraphicRoot"/>, or a runtime-spawned panel,
+/// or legacy paired jamb icons from <see cref="iconSprite"/>.
 /// </summary>
 /// <remarks>
 /// <b>Tighter door hitbox:</b> each door object uses a <see cref="UnityEngine.BoxCollider2D"/> on the same
@@ -15,7 +16,28 @@ public class Door : MonoBehaviour
 {
     public DoorDirection direction;
 
-    [Header("Doorway icons (optional)")]
+    [Header("Door graphic placement (prefab)")]
+    [Tooltip("Use the child named DoorGraphic (or any transform). Select it in the Hierarchy and move, rotate, and scale in the Scene view — that pose is what you see in play mode.")]
+    [SerializeField] Transform doorGraphicRoot;
+
+    [Tooltip("When on, each room load sets the child SpriteRenderer Sorting Order to match Door Panel Sorting Order below. Turn off to control sorting only on the SpriteRenderer.")]
+    [SerializeField] bool syncGraphicSortingOrder = true;
+
+    [Header("Runtime panel (only if Door Graphic Root is not assigned)")]
+    [Tooltip("Sorting order for a spawned DoorPanel when no doorGraphicRoot is set.")]
+    public int doorPanelSortingOrder = 4;
+
+    [Tooltip("Uniform scale for spawned DoorPanel.")]
+    public float doorPanelUniformScale = 1f;
+
+    [Tooltip("Local offset for spawned DoorPanel.")]
+    public Vector2 doorPanelLocalOffset;
+
+    [Tooltip("Local Z rotation in degrees for spawned DoorPanel.")]
+    public float doorPanelLocalEulerZ = 0f;
+
+    [Header("Doorway icons (fallback when no panel sprite)")]
+    [Tooltip("Small jamb icons only used when there is no sprite from the Room (Door Graphic N/E/S/W) and none on the DoorGraphic SpriteRenderer in the prefab.")]
     public Sprite iconSprite;
     [Tooltip("Distance from door center along the wall, to each icon (left/right or up/down).")]
     public float iconLocalHalfWidth = 0.35f;
@@ -26,13 +48,103 @@ public class Door : MonoBehaviour
     [Tooltip("Uniform scale for each icon sprite.")]
     public float iconScale = 0.35f;
 
-    private DungeonRoomController roomController;
+    private DungeonRoomController _roomController;
 
     private void Awake()
     {
-        roomController = GetComponentInParent<DungeonRoomController>();
-        if (iconSprite != null && transform.Find("DoorIcon_L") == null)
+        _roomController = GetComponentInParent<DungeonRoomController>();
+    }
+
+    /// <summary>
+    /// Called by <see cref="DungeonRoomController.SetupFromRoomState"/> after door active state is set.
+    /// </summary>
+    public void ConfigureVisuals(Sprite roomAssignedPanelSprite)
+    {
+        ClearGeneratedVisuals();
+
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        Sprite panelSprite = ResolvePanelSprite(roomAssignedPanelSprite);
+
+        if (doorGraphicRoot != null)
+        {
+            ApplyToGraphicRoot(panelSprite);
+            if (panelSprite == null && iconSprite != null)
+                CreateDoorwayIcons();
+            return;
+        }
+
+        if (panelSprite != null)
+        {
+            CreatePanelChild(panelSprite);
+            return;
+        }
+
+        if (iconSprite != null)
             CreateDoorwayIcons();
+    }
+
+    /// <summary>
+    /// Room controller sprites override; if those are empty, use whatever is already on the prefab DoorGraphic (so you can assign art only on the child).
+    /// </summary>
+    Sprite ResolvePanelSprite(Sprite fromRoom)
+    {
+        if (fromRoom != null)
+            return fromRoom;
+
+        if (doorGraphicRoot != null)
+        {
+            var sr = doorGraphicRoot.GetComponent<SpriteRenderer>();
+            if (sr != null && sr.sprite != null)
+                return sr.sprite;
+        }
+
+        return null;
+    }
+
+    void ApplyToGraphicRoot(Sprite sprite)
+    {
+        doorGraphicRoot.gameObject.SetActive(sprite != null);
+        if (sprite == null)
+            return;
+
+        SpriteRenderer sr = doorGraphicRoot.GetComponent<SpriteRenderer>();
+        if (sr == null)
+            sr = doorGraphicRoot.gameObject.AddComponent<SpriteRenderer>();
+
+        sr.sprite = sprite;
+        sr.color = Color.white;
+        if (syncGraphicSortingOrder)
+            sr.sortingOrder = doorPanelSortingOrder;
+    }
+
+    private void ClearGeneratedVisuals()
+    {
+        DestroyChildIfExists("DoorPanel");
+        DestroyChildIfExists("DoorIcon_L");
+        DestroyChildIfExists("DoorIcon_R");
+    }
+
+    private void DestroyChildIfExists(string childName)
+    {
+        Transform t = transform.Find(childName);
+        if (t != null)
+            Destroy(t.gameObject);
+    }
+
+    private void CreatePanelChild(Sprite sprite)
+    {
+        GameObject go = new GameObject("DoorPanel");
+        go.transform.SetParent(transform, false);
+        go.transform.localPosition = new Vector3(doorPanelLocalOffset.x, doorPanelLocalOffset.y, 0f);
+        go.transform.localRotation = Quaternion.Euler(0f, 0f, doorPanelLocalEulerZ);
+        go.transform.localScale = Vector3.one * doorPanelUniformScale;
+
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.color = Color.white;
+        sr.sortingOrder = doorPanelSortingOrder;
     }
 
     private void CreateDoorwayIcons()
@@ -40,8 +152,6 @@ public class Door : MonoBehaviour
         Vector3 leftLocal;
         Vector3 rightLocal;
 
-        // North/South: opening runs east-west → icons sit on −X / +X from center.
-        // East/West: opening runs north-south → icons sit on −Y / +Y from center.
         switch (direction)
         {
             case DoorDirection.North:
@@ -98,13 +208,13 @@ public class Door : MonoBehaviour
         if (Time.time - s_lastSuccessfulDoorTransitionTime < doorCooldownAfterTransitionSeconds)
             return;
 
-        if (roomController == null)
+        if (_roomController == null)
         {
             Debug.LogError("Door has no DungeonRoomController in its parents.", this);
             return;
         }
 
-        if (roomController.TryMoveToAdjacentRoom(direction))
+        if (_roomController.TryMoveToAdjacentRoom(direction))
             s_lastSuccessfulDoorTransitionTime = Time.time;
     }
 }

@@ -20,12 +20,46 @@ public class DungeonRoomController : MonoBehaviour
     public Transform spawnSouth;
     public Transform spawnWest;
 
+    [Header("Start room (0,0) only")]
+    [Tooltip("Dungeon entrance decoration (child object on the Room prefab). Edit that object’s Transform / SpriteRenderer in the prefab to move, scale, flip, or change sorting. Shown only in the starting room.")]
+    public SpriteRenderer dungeonFrontDoor;
+
+    [Header("Door graphics (optional)")]
+    [Tooltip("Sprites for each direction on active doors. If set, overrides the Sprite on each Door’s DoorGraphic child. Leave all empty to use sprites you assigned only on those DoorGraphic objects in the Room prefab.")]
+    public Sprite doorGraphicNorth;
+    public Sprite doorGraphicEast;
+    public Sprite doorGraphicSouth;
+    public Sprite doorGraphicWest;
+
     public void SetupFromRoomState(RoomState room)
     {
         if (doorNorth != null) doorNorth.SetActive(room.doorNorth);
         if (doorEast != null) doorEast.SetActive(room.doorEast);
         if (doorSouth != null) doorSouth.SetActive(room.doorSouth);
         if (doorWest != null) doorWest.SetActive(room.doorWest);
+
+        ConfigureDoorVisuals();
+
+        if (dungeonFrontDoor != null)
+            dungeonFrontDoor.gameObject.SetActive(coord == Vector2Int.zero);
+    }
+
+    void ConfigureDoorVisuals()
+    {
+        TryConfigureDoor(doorNorth, doorGraphicNorth);
+        TryConfigureDoor(doorEast, doorGraphicEast);
+        TryConfigureDoor(doorSouth, doorGraphicSouth);
+        TryConfigureDoor(doorWest, doorGraphicWest);
+    }
+
+    static void TryConfigureDoor(GameObject doorGo, Sprite roomSprite)
+    {
+        if (doorGo == null)
+            return;
+
+        Door door = doorGo.GetComponent<Door>();
+        if (door != null)
+            door.ConfigureVisuals(roomSprite);
     }
 
 
