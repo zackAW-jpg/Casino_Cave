@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5416129622660331823}
   - component: {fileID: 1106443355617337782}
-  - component: {fileID: 2570799009504591759}
   - component: {fileID: 5688667618479479158}
   - component: {fileID: 7915146739228853302}
   - component: {fileID: 1414410228030534953}
+  - component: {fileID: 847469898118263222}
   m_Layer: 0
   m_Name: TheBurntOne
   m_TagString: Untagged
@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 5372154953848838936}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.9123, y: 0.9145, z: 0}
-  m_LocalScale: {x: 0.82654774, y: 0.59332013, z: 1}
+  m_LocalPosition: {x: -4.3692, y: 0.9145, z: 0}
+  m_LocalScale: {x: 0.5409774, y: 0.59332013, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -63,43 +63,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!70 &2570799009504591759
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5372154953848838936}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -0.12560862, y: 0.019443134}
-  m_Size: {x: 2.4260242, y: 3.6636765}
-  m_Direction: 0
 --- !u!114 &5688667618479479158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +77,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossHealth
   maxHP: 40
   currentHP: 0
-  displayName: The Burnt One
+  displayName: The Awakened One
   coinPrefab: {fileID: 0}
   coinsOnDeath: 15
   coinSpawnRadius: 2.5
@@ -136,14 +99,10 @@ MonoBehaviour:
   roomCoord: {x: 0, y: 0}
   roomEngageDelaySeconds: 0.2
   bossHUD: {fileID: 0}
-  moveSpeed: 1.6
+  moveSpeed: 3
   stopDistanceFromPlayer: 1.2
-  bossBulletPrefab: {fileID: 3401750203084898283, guid: 9b0b0e5ebe9051d4ea8536cc448bd926, type: 3}
-  firePoint: {fileID: 0}
-  shootInterval: 2.8
-  bulletSpeed: 3.5
-  slamProximity: 4
-  slamWindup: 1.1
+  slamTriggerDistance: 2
+  slamJumpTelegraph: 0.55
   slamCooldown: 4.5
   shockwaveRadius: 2.3
   slamDamage: 3
@@ -151,6 +110,40 @@ MonoBehaviour:
   slamHitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  slamTakeoffVfxPrefab: {fileID: 3432958286849152088, guid: 87ee7299dd44ed747af24dbb91bcd33b, type: 3}
+  slamLandVfxPrefab: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
+  slamVfxSpawnPoint: {fileID: 0}
+  chargeTriggerDistance: 3.25
+  chargeWindup: 0.45
+  chargeSpeed: 11
+  chargeStopDistance: 0.12
+  chargeCooldown: 3.6
+  chargeOvershootDistance: 5
+  chargeDamage: 4
+  chargeHitRadius: 0.7
+  chargeHitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  chargeWallMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  roomBoundsExtraInset: 0.35
+  minTimeBetweenAttacks: 1.5
+  audioSource: {fileID: 0}
+  slamTakeoffSfx: {fileID: 0}
+  slamLandSfx: {fileID: 0}
+  chargeWindupSfx: {fileID: 0}
+  chargeStartSfx: {fileID: 0}
+  chargeWallCancelSfx: {fileID: 0}
+  animator: {fileID: 0}
+  slamJumpTrigger: SlamJump
+  slamLandTrigger: SlamLand
+  chargeWindupTrigger: ChargeWindup
+  chargeStartTrigger: ChargeStart
+  useFallbackScaleAnimation: 1
+  slamJumpScale: {x: 1.12, y: 1.12, z: 1}
+  slamAirScale: {x: 0.9, y: 0.9, z: 1}
+  chargeWindupScale: {x: 1.15, y: 0.9, z: 1}
 --- !u!212 &1414410228030534953
 SpriteRenderer:
   serializedVersion: 2
@@ -200,13 +193,49 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1293426778960383051, guid: e77a9f15a59693c4486f3d84a9bd8f92, type: 3}
+  m_Sprite: {fileID: -8004290048961584826, guid: 9e3eaa43ca45ddc4da43931e51961695, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.65, y: 3.63}
+  m_Size: {x: 3.2, y: 2.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!58 &847469898118263222
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5372154953848838936}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.01955202, y: -0.010696526}
+  m_Radius: 1.3005058

@@ -23,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.angularVelocity = 0f;
         controls = new PlayerControls();
         _dodge = GetComponent<PlayerDodge>();
     }

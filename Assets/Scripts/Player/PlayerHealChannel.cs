@@ -16,6 +16,7 @@ public class PlayerHealChannel : MonoBehaviour
     private PlayerDodge _dodge;
     private Coroutine _routine;
     private bool _interrupted;
+    private bool _requireReleaseBeforeNextHeal;
 
     public bool IsChannelingHeal { get; private set; }
 
@@ -29,6 +30,14 @@ public class PlayerHealChannel : MonoBehaviour
     {
         if (Keyboard.current == null)
             return;
+
+        if (_requireReleaseBeforeNextHeal)
+        {
+            if (!Keyboard.current.rKey.isPressed)
+                _requireReleaseBeforeNextHeal = false;
+            return;
+        }
+
         if (!Keyboard.current.rKey.wasPressedThisFrame)
             return;
 
@@ -51,6 +60,7 @@ public class PlayerHealChannel : MonoBehaviour
             return;
 
         _interrupted = false;
+        _requireReleaseBeforeNextHeal = true;
         if (_routine != null)
             StopCoroutine(_routine);
         _routine = StartCoroutine(HealChannelRoutine());

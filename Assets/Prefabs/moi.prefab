@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 8822334455667788999}
   - component: {fileID: 7571927485519907787}
   - component: {fileID: 2018902493188459698}
+  - component: {fileID: 7123456789012345680}
   m_Layer: 0
   m_Name: moi
   m_TagString: Player
@@ -132,7 +133,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &3725441780116506848
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -448,6 +449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GamblingArmController
   rollDurationSeconds: 1
+  minSecondsBetweenAttacks: 1
   punchAttackDuration: 0.28
   shurikenAttackDuration: 0.22
   gloveAttackDuration: 0.32
@@ -504,6 +506,19 @@ MonoBehaviour:
   mushroomShockwaveScaleMul: 1.4
   punchTrailLocalOffset: {x: 0, y: 0, z: 0}
   punchTrailRotationOffsetDegrees: -120
+--- !u!114 &7123456789012345680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473123839722449136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c2b3a40596587463120918273645aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRoomBoundsClamp
+  extraInset: 0.1
 --- !u!1 &4099271938391064287
 GameObject:
   m_ObjectHideFlags: 0

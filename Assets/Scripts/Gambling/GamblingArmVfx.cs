@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Spawns gambling-attack VFX. Assign prefabs in the Inspector (paths documented in tooltips).
 /// </summary>
+[DisallowMultipleComponent]
 public class GamblingArmVfx : MonoBehaviour
 {
     [Header("Projectile attachments")]

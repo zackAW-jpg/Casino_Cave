@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 /// Slot roll → ready → left-click attack → (after attack duration) roll again.
 /// Optional bottom-left <see cref="GamblingArmSlotHud"/> during Rolling; wire projectiles/VFX on this object.
 /// </summary>
+[DisallowMultipleComponent]
 public class GamblingArmController : MonoBehaviour
 {
     public enum Phase
@@ -18,6 +19,8 @@ public class GamblingArmController : MonoBehaviour
 
     [Header("Timing")]
     public float rollDurationSeconds = 1f;
+    [Tooltip("Minimum seconds between one left-click attack commit and the next. Ignores spam clicks in Ready.")]
+    public float minSecondsBetweenAttacks = 1f;
     [Tooltip("Placeholder until real attack animations exist.")]
     public float punchAttackDuration = 0.28f;
     public float shurikenAttackDuration = 0.22f;
@@ -84,9 +87,26 @@ public class GamblingArmController : MonoBehaviour
     private Camera _cam;
     private Transform _firePoint;
     private GamblingArmVfx _vfx;
+    private float _nextAttackCommitAllowedTime;
 
     private void Awake()
     {
+        GamblingArmController[] arms = GetComponents<GamblingArmController>();
+        if (arms.Length > 1)
+        {
+            Debug.LogError(
+                "GamblingArmController: more than one on this object causes duplicate attacks. Removing extras.",
+                gameObject);
+            if (arms[0] != this)
+            {
+                Destroy(this);
+                return;
+            }
+
+            for (int i = 1; i < arms.Length; i++)
+                Destroy(arms[i]);
+        }
+
         _cam = Camera.main;
         _vfx = GetComponent<GamblingArmVfx>();
         var shooting = GetComponent<PlayerShooting>();
@@ -97,6 +117,8 @@ public class GamblingArmController : MonoBehaviour
     private void OnEnable()
     {
         GamblingArmRuntimeState.SlotsUnlockedChanged += OnSlotsUnlockedChanged;
+        if (GamblingArmRuntimeState.SlotsUnlocked)
+            TryScheduleDeferredRollStart();
     }
 
     private void OnDisable()
@@ -112,8 +134,6 @@ public class GamblingArmController : MonoBehaviour
     private void Start()
     {
         ApplySlotHudActive();
-        if (GamblingArmRuntimeState.SlotsUnlocked)
-            BeginRollCycle();
     }
 
     private void OnSlotsUnlockedChanged()
@@ -126,8 +146,7 @@ public class GamblingArmController : MonoBehaviour
 
         if (GamblingArmRuntimeState.SlotsUnlocked)
         {
-            // Wait one frame so NPC dialogue can finish the same E-press without UI stealing input.
-            _deferredUnlockRoutine = StartCoroutine(DeferredShowHudAndRoll());
+            TryScheduleDeferredRollStart();
         }
         else
         {
@@ -140,11 +159,22 @@ public class GamblingArmController : MonoBehaviour
         }
     }
 
-    private IEnumerator DeferredShowHudAndRoll()
+    /// <summary>Waits one frame so NPC dialogue / UI do not eat the same input as unlock.</summary>
+    private void TryScheduleDeferredRollStart()
+    {
+        if (!GamblingArmRuntimeState.SlotsUnlocked || !isActiveAndEnabled)
+            return;
+        if (_deferredUnlockRoutine != null)
+            return;
+
+        _deferredUnlockRoutine = StartCoroutine(CoDeferredRollAfterUnlock());
+    }
+
+    private IEnumerator CoDeferredRollAfterUnlock()
     {
         yield return null;
         _deferredUnlockRoutine = null;
-        if (!GamblingArmRuntimeState.SlotsUnlocked)
+        if (!GamblingArmRuntimeState.SlotsUnlocked || !isActiveAndEnabled)
             yield break;
 
         ApplySlotHudActive();
@@ -166,16 +196,27 @@ public class GamblingArmController : MonoBehaviour
             return;
         if (CurrentPhase != Phase.Ready)
             return;
+        if (Time.time < _nextAttackCommitAllowedTime)
+            return;
         if (!Mouse.current.leftButton.wasPressedThisFrame)
             return;
 
+        _nextAttackCommitAllowedTime = Time.time + Mathf.Max(0f, minSecondsBetweenAttacks);
+
+        GamblingArmRollResult committedRoll = _roll;
+
         if (_phaseRoutine != null)
             StopCoroutine(_phaseRoutine);
-        _phaseRoutine = StartCoroutine(AttackThenRollRoutine());
+
+        CurrentPhase = Phase.Attacking;
+        _phaseRoutine = StartCoroutine(AttackAfterReadyRoutine(committedRoll));
     }
 
     private void BeginRollCycle()
     {
+        if (!GamblingArmRuntimeState.SlotsUnlocked || !isActiveAndEnabled)
+            return;
+
         if (_phaseRoutine != null)
             StopCoroutine(_phaseRoutine);
         _phaseRoutine = StartCoroutine(RollRoutine());
@@ -209,13 +250,12 @@ public class GamblingArmController : MonoBehaviour
 #endif
     }
 
-    private IEnumerator AttackThenRollRoutine()
+    private IEnumerator AttackAfterReadyRoutine(GamblingArmRollResult committedRoll)
     {
-        CurrentPhase = Phase.Attacking;
         _critShakePlayedThisAttack = false;
 
-        float dur = GetAttackDurationPlaceholder(_roll.Attack);
-        ExecuteAttack(_roll);
+        float dur = GetAttackDurationPlaceholder(committedRoll.Attack);
+        ExecuteAttack(committedRoll);
 
         yield return new WaitForSeconds(dur);
         BeginRollCycle();
