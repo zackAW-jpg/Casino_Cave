@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,9 +28,22 @@ public class SpeechBubble : MonoBehaviour
             messageObject = GetComponentInChildren<Text>()?.gameObject;
         if (messageObject != null)
             _messageGraphic = messageObject.GetComponent<Graphic>();
+        if (messageObject != null && _messageGraphic == null)
+        {
+            var tmp = messageObject.GetComponent<TMP_Text>();
+            if (tmp != null)
+                _messageGraphic = tmp;
+        }
+        ApplyWhiteMessageColor();
         if (bubbleImage == null)
             bubbleImage = GetComponentInChildren<Image>();
         Hide();
+    }
+
+    void ApplyWhiteMessageColor()
+    {
+        if (_messageGraphic != null)
+            _messageGraphic.color = Color.white;
     }
 
     void Update()
@@ -64,6 +78,7 @@ public class SpeechBubble : MonoBehaviour
     public void Show(string text)
     {
         SetMessageText(messageObject, text);
+        ApplyWhiteMessageColor();
         if (_canvas != null)
             _canvas.enabled = true;
         if (bubbleImage != null)
