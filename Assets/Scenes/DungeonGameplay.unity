@@ -2284,6 +2284,14 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8822334455667788999, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
+      propertyPath: fontSize
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822334455667788999, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
+      propertyPath: localOffset.y
+      value: 1.75
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
