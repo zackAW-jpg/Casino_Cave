@@ -39,6 +39,9 @@ public class PlayerShooting : MonoBehaviour
         if (_cam == null || Mouse.current == null)
             return;
 
+        if (!GameplayInputGate.PlayerWorldActionsEnabled)
+            return;
+
         AimAtMouse();
 
         bool shootPressed = Mouse.current.leftButton.wasPressedThisFrame;

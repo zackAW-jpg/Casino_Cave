@@ -108,6 +108,7 @@ public class DungeonRoomController : MonoBehaviour
 
         dungeonState.currentRoomCoord = targetCoord;
         MovePlayerToSpawnInNewRoom(direction, targetRoom);
+        GameplaySaveContext.PersistRun();
         return true;
     }
 

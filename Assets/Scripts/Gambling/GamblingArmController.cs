@@ -77,6 +77,21 @@ public class GamblingArmController : MonoBehaviour
     [FormerlySerializedAs("rollDisplay")]
     public GamblingArmSlotHud slotHud;
 
+    [Header("Audio — gambling attacks (optional)")]
+    public AudioSource sfxSource;
+    [Tooltip("When middle slot is Fire (stacked with attack SFX below).")]
+    public AudioClip fireAttackSound;
+    [Tooltip("When middle slot is Ice.")]
+    public AudioClip iceAttackSound;
+    [Tooltip("Boxing glove / extended punch attack.")]
+    public AudioClip boxingGlovePunchSound;
+    [Tooltip("Shuriken throw.")]
+    public AudioClip shurikenWhooshSound;
+    [Tooltip("Melee punch whoosh.")]
+    public AudioClip meleeWhooshSound;
+    [Tooltip("Player hammer shockwave — assign up to 5 variants; one is chosen at random each slam.")]
+    public AudioClip[] hammerSlamVariantSounds = new AudioClip[5];
+
     public Phase CurrentPhase { get; private set; } = Phase.Rolling;
 
     private GamblingArmRollResult _roll;
@@ -112,6 +127,9 @@ public class GamblingArmController : MonoBehaviour
         var shooting = GetComponent<PlayerShooting>();
         if (shooting != null && shooting.firePoint != null)
             _firePoint = shooting.firePoint;
+
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
     }
 
     private void OnEnable()
@@ -190,6 +208,9 @@ public class GamblingArmController : MonoBehaviour
     private void Update()
     {
         if (!GamblingArmRuntimeState.SlotsUnlocked)
+            return;
+
+        if (!GameplayInputGate.PlayerWorldActionsEnabled)
             return;
 
         if (Mouse.current == null)
@@ -293,6 +314,8 @@ public class GamblingArmController : MonoBehaviour
     /// <summary>Returns true if any valid target was hit (for crit shake fallback on melee).</summary>
     private bool ExecuteAttack(GamblingArmRollResult r)
     {
+        PlayGamblingAttackAudio(r);
+
         Vector2 aim = GetAimDirection();
         bool mush = r.Modifier == GamblingModifierType.Mushroom;
         float rMul = mush ? mushroomRadiusMul : 1f;
@@ -431,6 +454,40 @@ public class GamblingArmController : MonoBehaviour
         }
 
         return any;
+    }
+
+    void PlayGamblingAttackAudio(GamblingArmRollResult r)
+    {
+        Vector3 p = transform.position;
+
+        switch (r.Modifier)
+        {
+            case GamblingModifierType.Fire:
+                SfxUtil.PlayOneShot(fireAttackSound, sfxSource, p);
+                break;
+            case GamblingModifierType.Ice:
+                SfxUtil.PlayOneShot(iceAttackSound, sfxSource, p);
+                break;
+        }
+
+        switch (r.Attack)
+        {
+            case GamblingAttackType.Punch:
+                SfxUtil.PlayOneShot(meleeWhooshSound != null ? meleeWhooshSound : boxingGlovePunchSound, sfxSource, p);
+                break;
+            case GamblingAttackType.ShurikenThrow:
+                SfxUtil.PlayOneShot(shurikenWhooshSound, sfxSource, p);
+                break;
+            case GamblingAttackType.ExtendedPunch:
+                SfxUtil.PlayOneShot(boxingGlovePunchSound, sfxSource, p);
+                break;
+            case GamblingAttackType.HammerSlam:
+            {
+                AudioClip slam = SfxUtil.PickRandomNonNull(hammerSlamVariantSounds);
+                SfxUtil.PlayOneShot(slam, sfxSource, p);
+                break;
+            }
+        }
     }
 
     private bool DoShurikens(Vector2 aim, GamblingArmRollResult r, float scaleMul)

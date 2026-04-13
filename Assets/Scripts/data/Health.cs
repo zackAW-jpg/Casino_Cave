@@ -9,6 +9,12 @@ public class Health : MonoBehaviour
     public GameObject damagePopupPrefab;
     public Vector3 popupOffset = new Vector3(0f, 0.2f, 0f);
 
+    [Header("Audio (optional — grunts / generic enemies)")]
+    [Tooltip("Plays when this enemy takes damage (e.g. assign grunt hit SFX on the Security Guard prefab).")]
+    public AudioSource hurtAudioSource;
+    public AudioClip hurtSound;
+    public AudioClip deathSound;
+
     private void Awake()
     {
         currentHP = maxHP;
@@ -34,6 +40,10 @@ public class Health : MonoBehaviour
 
         Debug.Log($"{name} took {amount} damage, HP now {currentHP}");
 
+        if (hurtAudioSource == null)
+            hurtAudioSource = GetComponent<AudioSource>();
+        SfxUtil.PlayOneShot(hurtSound, hurtAudioSource, transform.position);
+
         if (currentHP <= 0)
         {
             Die();
@@ -43,6 +53,11 @@ public class Health : MonoBehaviour
     private void Die()
     {
         Debug.Log($"{name} died");
+
+        if (hurtAudioSource == null)
+            hurtAudioSource = GetComponent<AudioSource>();
+        SfxUtil.PlayOneShot(deathSound, hurtAudioSource, transform.position);
+
         Destroy(gameObject);
     }
 }

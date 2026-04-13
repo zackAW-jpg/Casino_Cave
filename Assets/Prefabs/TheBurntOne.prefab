@@ -78,6 +78,9 @@ MonoBehaviour:
   maxHP: 40
   currentHP: 0
   displayName: The Awakened One
+  hurtAudioSource: {fileID: 0}
+  hurtSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: dec374b1f47ffdf45a546a2fd19539bd, type: 3}
   coinPrefab: {fileID: 0}
   coinsOnDeath: 15
   coinSpawnRadius: 2.5
@@ -113,7 +116,6 @@ MonoBehaviour:
   slamTakeoffVfxPrefab: {fileID: 3432958286849152088, guid: 87ee7299dd44ed747af24dbb91bcd33b, type: 3}
   slamLandVfxPrefab: {fileID: 4021103657954561961, guid: 5c755f9bc5253ea418e919994537dcc7, type: 3}
   slamVfxSpawnPoint: {fileID: 0}
-  chargeTriggerDistance: 3.25
   chargeWindup: 0.45
   chargeSpeed: 11
   chargeStopDistance: 0.12
@@ -131,10 +133,19 @@ MonoBehaviour:
   minTimeBetweenAttacks: 1.5
   audioSource: {fileID: 0}
   slamTakeoffSfx: {fileID: 0}
-  slamLandSfx: {fileID: 0}
-  chargeWindupSfx: {fileID: 0}
+  slamLandSfx: {fileID: 8300000, guid: 79cc22cc46ed8ed4ea43c694899b5d83, type: 3}
+  slamLandVariantSfx:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  chargeWindupSfx: {fileID: 8300000, guid: 6633694ce74ddb44b9e00a4159f1d271, type: 3}
   chargeStartSfx: {fileID: 0}
   chargeWallCancelSfx: {fileID: 0}
+  bossIdleNoiseSounds: []
+  bossIdleNoiseMinInterval: 5
+  bossIdleNoiseMaxInterval: 12
   animator: {fileID: 0}
   slamJumpTrigger: SlamJump
   slamLandTrigger: SlamLand

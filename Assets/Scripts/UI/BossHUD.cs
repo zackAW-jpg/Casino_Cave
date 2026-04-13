@@ -3,14 +3,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Boss HP bar (bottom-center). Call <see cref="Bind"/> when a boss spawns; hides on boss death.
+/// Boss HP bar (anchored in the scene — e.g. bottom area, offset right of the player HUD).
+/// Call <see cref="Bind"/> when a boss spawns; hides on boss death.
 /// Reuses the same fill-Image pattern as <see cref="PlayerHUD"/>.
 /// </summary>
 public class BossHUD : MonoBehaviour
 {
     [Header("UI")]
     public Image hpFillImage;
-    [Tooltip("Optional. Name is taken from BossHealth.displayName (e.g. \"The Burnt One\"). Place to the left of the bar.")]
+    [Tooltip("Optional. Name is taken from BossHealth.displayName (e.g. \"The Awakened One\"). Place to the left of the bar.")]
     public TextMeshProUGUI bossNameText;
     [Tooltip("Optional extra root under this object (e.g. HPBar). Bind always enables this component's GameObject first so a disabled parent does not hide the bar.")]
     public GameObject hudRoot;
@@ -84,7 +85,7 @@ public class BossHUD : MonoBehaviour
     {
         if (bossNameText == null || _boss == null)
             return;
-        bossNameText.text = string.IsNullOrEmpty(_boss.displayName) ? "The Burnt One" : _boss.displayName;
+        bossNameText.text = string.IsNullOrEmpty(_boss.displayName) ? "The Awakened One" : _boss.displayName;
     }
 
     private void OnDestroy()

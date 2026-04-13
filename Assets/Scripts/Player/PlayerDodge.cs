@@ -60,6 +60,8 @@ public class PlayerDodge : MonoBehaviour
 
     private void TryStartDodge()
     {
+        if (!GameplayInputGate.PlayerWorldActionsEnabled)
+            return;
         if (_dodging)
             return;
         if (_healChannel != null && _healChannel.IsChannelingHeal)

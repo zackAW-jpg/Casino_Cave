@@ -12,6 +12,10 @@ public class PlayerHealChannel : MonoBehaviour
     [Tooltip("Seconds before the potion is consumed and heal is applied.")]
     public float channelDuration = 1f;
 
+    [Header("Audio (optional)")]
+    public AudioClip healSuccessSound;
+    public AudioSource healAudioSource;
+
     private PlayerHealth _health;
     private PlayerDodge _dodge;
     private Coroutine _routine;
@@ -46,6 +50,8 @@ public class PlayerHealChannel : MonoBehaviour
 
     private void TryStartHeal()
     {
+        if (!GameplayInputGate.PlayerWorldActionsEnabled)
+            return;
         if (IsChannelingHeal)
             return;
         if (_health == null || _health.state == null)
@@ -107,6 +113,8 @@ public class PlayerHealChannel : MonoBehaviour
         int heal = Mathf.Min(state.healthPotionHealAmount, missing);
         state.currentHP += heal;
         _health.RaiseHealthChanged();
+        SfxUtil.PlayOneShot(healSuccessSound, healAudioSource, transform.position);
+        GameplaySaveContext.PersistRun();
     }
 
     /// <summary>Called from <see cref="PlayerHealth.TakeDamage"/> before damage is applied.</summary>

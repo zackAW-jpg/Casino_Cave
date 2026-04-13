@@ -49,6 +49,8 @@ public class CoinPickup : MonoBehaviour
         player.state.gold += goldAmount;
         Debug.Log($"You've gained {goldAmount} chip(s). Total chips: {player.state.gold}");
 
+        GameplaySaveContext.PersistRun();
+
         Destroy(gameObject);
     }
 }

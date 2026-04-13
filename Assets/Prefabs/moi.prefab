@@ -478,6 +478,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   slotHud: {fileID: 0}
+  sfxSource: {fileID: 0}
+  fireAttackSound: {fileID: 0}
+  iceAttackSound: {fileID: 0}
+  boxingGlovePunchSound: {fileID: 0}
+  shurikenWhooshSound: {fileID: 0}
+  meleeWhooshSound: {fileID: 8300000, guid: eabf1a13f6ddf4a47acf4525ee00b1bc, type: 3}
+  hammerSlamVariantSounds:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &2018902493188459698
 MonoBehaviour:
   m_ObjectHideFlags: 0

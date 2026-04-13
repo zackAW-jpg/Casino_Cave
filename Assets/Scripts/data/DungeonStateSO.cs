@@ -248,4 +248,34 @@ public class DungeonStateSO : ScriptableObject
             r.doorWest = roomLookup.ContainsKey(r.coord + Vector2Int.left);
         }
     }
+
+    /// <summary>Replaces all rooms from a save snapshot and rebuilds the coord lookup.</summary>
+    public void ApplySavedDungeon(System.Collections.Generic.List<RoomState> snapshot, Vector2Int currentCoord)
+    {
+        rooms.Clear();
+        roomLookup.Clear();
+        reservedCoords.Clear();
+
+        for (int i = 0; i < snapshot.Count; i++)
+        {
+            RoomState src = snapshot[i];
+            var copy = new RoomState
+            {
+                coord = src.coord,
+                doorNorth = src.doorNorth,
+                doorEast = src.doorEast,
+                doorSouth = src.doorSouth,
+                doorWest = src.doorWest,
+                eventType = src.eventType,
+                visited = src.visited,
+                cleared = src.cleared,
+                bossDefeated = src.bossDefeated,
+                distanceFromStart = src.distanceFromStart
+            };
+            rooms.Add(copy);
+            roomLookup.Add(copy.coord, copy);
+        }
+
+        currentRoomCoord = currentCoord;
+    }
 }

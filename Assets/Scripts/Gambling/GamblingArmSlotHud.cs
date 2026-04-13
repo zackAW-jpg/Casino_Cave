@@ -38,7 +38,14 @@ public class GamblingArmSlotHud : MonoBehaviour
     public float slamScale = 1.12f;
     public float slamDurationSeconds = 0.08f;
 
-    [Header("Audio")]
+    [Header("Audio (optional)")]
+    [Tooltip("Short tick while reels are spinning (plays on each spin step).")]
+    public AudioClip reelSpinTickSound;
+
+    [Tooltip("When each reel locks: [0]=left attack reel, [1]=middle modifier reel, [2]=right crit reel. Null entries are skipped.")]
+    public AudioClip[] reelStopSoundsPerSlot = new AudioClip[3];
+
+    [Tooltip("Final ding when all three reels are locked and the roll is ready.")]
     public AudioClip rollCompleteSound;
     public AudioSource audioSource;
 
@@ -135,12 +142,14 @@ public class GamblingArmSlotHud : MonoBehaviour
                     SpinMiddle(reelMiddle);
                 SpinOuter(reelRight);
                 nextSpin += spinTickSeconds;
+                PlayReelSpinTick();
             }
 
             if (!lockedLeft && now >= lockLeft)
             {
                 ApplyOuter(reelLeft, result.Attack);
                 lockedLeft = true;
+                PlayReelStopSound(0);
                 yield return Slam(reelLeft);
             }
 
@@ -148,6 +157,7 @@ public class GamblingArmSlotHud : MonoBehaviour
             {
                 ApplyMiddle(reelMiddle, result.Modifier);
                 lockedMid = true;
+                PlayReelStopSound(1);
                 yield return Slam(reelMiddle);
             }
 
@@ -157,16 +167,19 @@ public class GamblingArmSlotHud : MonoBehaviour
         if (!lockedLeft)
         {
             ApplyOuter(reelLeft, result.Attack);
+            PlayReelStopSound(0);
             yield return Slam(reelLeft);
         }
 
         if (!lockedMid)
         {
             ApplyMiddle(reelMiddle, result.Modifier);
+            PlayReelStopSound(1);
             yield return Slam(reelMiddle);
         }
 
         ApplyOuter(reelRight, result.CritSymbol);
+        PlayReelStopSound(2);
         yield return Slam(reelRight);
 
         PlayCompleteSound();
@@ -279,6 +292,29 @@ public class GamblingArmSlotHud : MonoBehaviour
         }
 
         tr.localScale = baseScale;
+    }
+
+    void PlayReelSpinTick()
+    {
+        if (reelSpinTickSound == null)
+            return;
+        if (audioSource != null)
+            audioSource.PlayOneShot(reelSpinTickSound);
+        else
+            AudioSource.PlayClipAtPoint(reelSpinTickSound, transform.position, 1f);
+    }
+
+    void PlayReelStopSound(int slotIndex)
+    {
+        if (reelStopSoundsPerSlot == null || slotIndex < 0 || slotIndex >= reelStopSoundsPerSlot.Length)
+            return;
+        AudioClip c = reelStopSoundsPerSlot[slotIndex];
+        if (c == null)
+            return;
+        if (audioSource != null)
+            audioSource.PlayOneShot(c);
+        else
+            AudioSource.PlayClipAtPoint(c, transform.position, 1f);
     }
 
     private void PlayCompleteSound()

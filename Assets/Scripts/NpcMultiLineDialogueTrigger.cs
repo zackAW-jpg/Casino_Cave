@@ -50,6 +50,7 @@ public class NpcMultiLineDialogueTrigger : MonoBehaviour
     public bool requireReleaseBeforeNextAdvance = true;
 
     [Header("Audio (optional)")]
+    [Tooltip("NPC talk blip / UI tick each time the player advances a line (E / Space).")]
     public AudioClip advanceLineSound;
     public AudioSource audioSource;
 
@@ -192,7 +193,10 @@ public class NpcMultiLineDialogueTrigger : MonoBehaviour
             if (!IsInRange()) yield break;
 
             if (i == slotUnlockAtLineStartIndex)
+            {
                 GamblingArmRuntimeState.SetSlotsUnlocked(true);
+                GameplaySaveContext.PersistRun();
+            }
 
             if (spriteLayers != null)
                 spriteLayers.SetStep(i);

@@ -138,6 +138,8 @@ MonoBehaviour:
   iconScale: 0.35
   ignoreAfterDamageSeconds: 0.45
   doorCooldownAfterTransitionSeconds: 1
+  doorUseSound: {fileID: 8300000, guid: 53a810eb1eb8cd64b8c632c187cfd31d, type: 3}
+  doorAudioSource: {fileID: 0}
 --- !u!1 &1177007676647433973
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,6 +247,8 @@ MonoBehaviour:
   iconScale: 0.35
   ignoreAfterDamageSeconds: 0.45
   doorCooldownAfterTransitionSeconds: 1
+  doorUseSound: {fileID: 8300000, guid: 53a810eb1eb8cd64b8c632c187cfd31d, type: 3}
+  doorAudioSource: {fileID: 0}
 --- !u!1 &1570643713629697094
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,6 +790,8 @@ MonoBehaviour:
   iconScale: 0.35
   ignoreAfterDamageSeconds: 0.45
   doorCooldownAfterTransitionSeconds: 1
+  doorUseSound: {fileID: 8300000, guid: 53a810eb1eb8cd64b8c632c187cfd31d, type: 3}
+  doorAudioSource: {fileID: 0}
 --- !u!1 &5291155957539758675
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,6 +990,8 @@ MonoBehaviour:
   iconScale: 0.35
   ignoreAfterDamageSeconds: 0.45
   doorCooldownAfterTransitionSeconds: 1
+  doorUseSound: {fileID: 8300000, guid: 53a810eb1eb8cd64b8c632c187cfd31d, type: 3}
+  doorAudioSource: {fileID: 0}
 --- !u!1 &6972322007261489984
 GameObject:
   m_ObjectHideFlags: 0

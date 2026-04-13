@@ -26,6 +26,15 @@ public class SecurityGuard : MonoBehaviour
     [Tooltip("Brief highlight if there is no Animator or no controller assigned.")]
     public bool punchFlashIfNoAnimator = true;
 
+    [Header("Audio (optional)")]
+    [Tooltip("Whoosh when a melee attack connects.")]
+    public AudioClip meleeSwingHitSound;
+    public AudioSource sfxSource;
+    [Tooltip("Idle grunts / shuffles while chasing the player in the same room.")]
+    public AudioClip[] gruntAmbientSounds;
+    public float gruntAmbientMinInterval = 4f;
+    public float gruntAmbientMaxInterval = 11f;
+
     [Header("Attack VFX")]
     [Tooltip("Spawned when a melee hit lands on the player (after dodge check).")]
     public GameObject attackVfxPrefab;
@@ -50,6 +59,7 @@ public class SecurityGuard : MonoBehaviour
     private float _roomEngageTimer;
     private bool _wasPlayerInRoom;
     private Coroutine _punchFlashCo;
+    private float _nextGruntAmbientTime = -1f;
 
     private void Awake()
     {
@@ -57,6 +67,8 @@ public class SecurityGuard : MonoBehaviour
         _rb.bodyType = RigidbodyType2D.Dynamic;
         if (animator == null)
             animator = GetComponent<Animator>();
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -115,6 +127,7 @@ public class SecurityGuard : MonoBehaviour
             Vector2 dir = toTarget.normalized;
             IntendedMoveDirection = dir;
             _rb.linearVelocity = dir * (moveSpeed * speedMul);
+            TryPlayGruntAmbient();
         }
         else
         {
@@ -152,9 +165,26 @@ public class SecurityGuard : MonoBehaviour
             return;
 
         playerHealth.TakeDamage(attackDamage);
+        SfxUtil.PlayOneShot(meleeSwingHitSound, sfxSource, transform.position);
         SpawnAttackVfx();
         PlayPunchAttackAnimation();
         ApplyKnockbackToPlayer();
+    }
+
+    void TryPlayGruntAmbient()
+    {
+        if (gruntAmbientSounds == null || gruntAmbientSounds.Length == 0)
+            return;
+
+        if (_nextGruntAmbientTime < 0f)
+            _nextGruntAmbientTime = Time.time + Random.Range(gruntAmbientMinInterval, gruntAmbientMaxInterval);
+
+        if (Time.time < _nextGruntAmbientTime)
+            return;
+
+        AudioClip c = SfxUtil.PickRandomNonNull(gruntAmbientSounds);
+        SfxUtil.PlayOneShot(c, sfxSource, transform.position);
+        _nextGruntAmbientTime = Time.time + Random.Range(gruntAmbientMinInterval, gruntAmbientMaxInterval);
     }
 
     private void SpawnAttackVfx()

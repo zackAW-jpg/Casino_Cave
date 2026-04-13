@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -9,6 +10,20 @@ public class PlayerHealth : MonoBehaviour
     [Tooltip("How many potions at a new run (written to PlayerStateSO.healthPotionCount in Awake).")]
     public int startingHealthPotions = 5;
 
+    [Header("Audio (optional)")]
+    public AudioSource hurtAudioSource;
+    public AudioClip hurtSound;
+    public AudioClip deathSound;
+
+    [Header("Death presentation (optional)")]
+    public Animator deathAnimator;
+    [Tooltip("Animator trigger when the player dies (optional).")]
+    public string deathAnimTrigger = "Death";
+    [Tooltip("Realtime seconds to wait after firing the death trigger before showing the UI.")]
+    public float deathAnimHoldSeconds = 0.85f;
+    [Tooltip("Used when no animator/trigger is set.")]
+    public float fallbackDeathHoldSeconds = 0.6f;
+
     public event Action<int, int> OnHealthChanged;
 
     /// <summary>Time.time when damage was last applied (after temp HP). Used to avoid accidental door transitions during knockback.</summary>
@@ -18,11 +33,20 @@ public class PlayerHealth : MonoBehaviour
     [Tooltip("Runtime-only temporary HP that is consumed before currentHP.")]
     public int tempHP = 0;
 
+    bool _dead;
+
     private void Awake()
     {
         if (state == null)
         {
             Debug.LogError("PlayerHealth: PlayerStateSO is not assigned.", this);
+            return;
+        }
+
+        if (ContinueLoadGuard.ConsumeSkipPlayerHealthInit())
+        {
+            tempHP = 0;
+            RaiseHealthChanged();
             return;
         }
 
@@ -34,6 +58,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
+        if (_dead) return;
         if (state == null) return;
         if (amount <= 0) return;
 
@@ -66,6 +91,11 @@ public class PlayerHealth : MonoBehaviour
         RaiseHealthChanged();
 
         gameObject.SendMessage("OnKnockbackReceived", SendMessageOptions.DontRequireReceiver);
+
+        if (hurtAudioSource == null)
+            hurtAudioSource = GetComponent<AudioSource>();
+        if (state.currentHP > 0)
+            SfxUtil.PlayOneShot(hurtSound, hurtAudioSource, transform.position);
 
         if (state.currentHP <= 0)
         {
@@ -112,7 +142,39 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
+        if (_dead) return;
+        _dead = true;
         Debug.Log("Player died");
-        // TODO: respawn, game over, etc.
+
+        if (hurtAudioSource == null)
+            hurtAudioSource = GetComponent<AudioSource>();
+        SfxUtil.PlayOneShot(deathSound, hurtAudioSource, transform.position);
+
+        if (GameplayMenusController.Instance != null)
+            GameplayMenusController.Instance.BeginDeathSequence(this);
+        else
+            Debug.LogWarning("PlayerHealth: no GameplayMenusController in scene — death UI skipped.", this);
+    }
+
+    /// <summary>After a full dungeon regen (retry / replay / pause restart).</summary>
+    public void PrepareForFreshRunAfterDungeonReset()
+    {
+        _dead = false;
+        if (state == null) return;
+        state.currentHP = state.maxHP;
+        tempHP = 0;
+        RaiseHealthChanged();
+    }
+
+    public IEnumerator PlayDeathPresentationIfAny()
+    {
+        if (deathAnimator != null && !string.IsNullOrEmpty(deathAnimTrigger))
+        {
+            deathAnimator.SetTrigger(deathAnimTrigger);
+            yield return new WaitForSecondsRealtime(Mathf.Max(0.05f, deathAnimHoldSeconds));
+            yield break;
+        }
+
+        yield return new WaitForSecondsRealtime(Mathf.Max(0.05f, fallbackDeathHoldSeconds));
     }
 }

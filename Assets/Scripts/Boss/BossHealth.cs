@@ -11,7 +11,12 @@ public class BossHealth : MonoBehaviour
 
     [Header("UI")]
     [Tooltip("Shown in the boss HUD next to the health bar.")]
-    public string displayName = "The Burnt One";
+    public string displayName = "The Awakened One";
+
+    [Header("Audio (optional)")]
+    public AudioSource hurtAudioSource;
+    public AudioClip hurtSound;
+    public AudioClip deathSound;
 
     [Header("Loot on death")]
     [Tooltip("If set, this many coins spawn in a ring when the boss dies (often assigned by DungeonRoomSpawner).")]
@@ -39,12 +44,20 @@ public class BossHealth : MonoBehaviour
 
         RaiseChanged();
 
+        if (hurtAudioSource == null)
+            hurtAudioSource = GetComponent<AudioSource>();
+        SfxUtil.PlayOneShot(hurtSound, hurtAudioSource, transform.position);
+
         if (currentHP <= 0)
             Die();
     }
 
     private void Die()
     {
+        if (hurtAudioSource == null)
+            hurtAudioSource = GetComponent<AudioSource>();
+        SfxUtil.PlayOneShot(deathSound, hurtAudioSource, transform.position);
+
         SpawnDeathCoins();
         OnDeath?.Invoke();
         Destroy(gameObject);

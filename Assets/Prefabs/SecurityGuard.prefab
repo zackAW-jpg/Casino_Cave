@@ -139,6 +139,9 @@ MonoBehaviour:
   currentHP: 0
   damagePopupPrefab: {fileID: 4499982856607948780, guid: 850a45f4381ebd549ba3784e3cdbd670, type: 3}
   popupOffset: {x: 0, y: -0.5, z: 0}
+  hurtAudioSource: {fileID: 0}
+  hurtSound: {fileID: 8300000, guid: 628ae9a704e9b714da276f1615208c08, type: 3}
+  deathSound: {fileID: 8300000, guid: f6e44066d8446ed4f90071308f7021d9, type: 3}
 --- !u!114 &5957113139703372498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,6 +164,12 @@ MonoBehaviour:
   animator: {fileID: 0}
   punchAttackTrigger: Punch
   punchFlashIfNoAnimator: 1
+  meleeSwingHitSound: {fileID: 8300000, guid: 28817f28becfa6242b72d2db74014038, type: 3}
+  sfxSource: {fileID: 0}
+  gruntAmbientSounds:
+  - {fileID: 8300000, guid: d34aa47350788804595f671957f513c6, type: 3}
+  gruntAmbientMinInterval: 1
+  gruntAmbientMaxInterval: 5
   attackVfxPrefab: {fileID: 8525990746615576120, guid: b85d21f3b8fed714bacf0c4fd50fa512, type: 3}
   attackVfxSpawnPoint: {fileID: 0}
   attackVfxForwardDistance: 0.35

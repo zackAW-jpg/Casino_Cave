@@ -31,6 +31,8 @@ public class DungeonRoomSpawner : MonoBehaviour
     [Header("Boss")]
     [Tooltip("Spawned in the room marked RoomEventType.Boss.")]
     public GameObject bossPrefab;
+    [Tooltip("Spawned in the boss room after the boss is defeated (or when loading a save with boss already defeated).")]
+    public GameObject caveExitBeaconPrefab;
     public BossHUD bossHUD;
     [Tooltip("Coins dropped around the boss when it dies (uses the same prefab as treasure rooms if coinPrefab is set).")]
     public int bossCoinsOnDeath = 18;
@@ -115,7 +117,15 @@ public class DungeonRoomSpawner : MonoBehaviour
             }
             if (roomState.eventType == RoomEventType.Boss)
             {
-                if (bossPrefab == null)
+                if (roomState.bossDefeated)
+                {
+                    if (caveExitBeaconPrefab != null)
+                    {
+                        Vector3 p = instance.transform.position;
+                        Instantiate(caveExitBeaconPrefab, p, Quaternion.identity, instance.transform);
+                    }
+                }
+                else if (bossPrefab == null)
                 {
                     Debug.LogWarning(
                         $"DungeonRoomSpawner: Boss room at {roomState.coord} but bossPrefab is not assigned.",
@@ -143,11 +153,39 @@ public class DungeonRoomSpawner : MonoBehaviour
                         bh.coinsOnDeath = bossCoinsOnDeath;
                         bh.coinSpawnRadius = bossCoinSpawnRadius;
                     }
+
+                    if (bh != null && caveExitBeaconPrefab != null)
+                    {
+                        RoomState rs = roomState;
+                        Transform roomRoot = instance.transform;
+                        bh.OnDeath += () => HandleBossDefeated(rs, roomRoot);
+                    }
                 }
             }
         }
 
         Debug.Log($"DungeonRoomSpawner: Spawned {_roomInstances.Count} rooms (spacing X={sx}, Y={sy}).");
+    }
+
+    void HandleBossDefeated(RoomState bossRoom, Transform roomRoot)
+    {
+        bossRoom.bossDefeated = true;
+        if (caveExitBeaconPrefab != null)
+        {
+            Vector3 p = roomRoot.position;
+            Instantiate(caveExitBeaconPrefab, p, Quaternion.identity, roomRoot);
+        }
+
+        GameplaySaveContext.PersistRun();
+    }
+
+    /// <summary>Destroys instantiated room roots parented under this spawner.</summary>
+    public void DestroySpawnedRooms()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+            Destroy(transform.GetChild(i).gameObject);
+
+        _roomInstances.Clear();
     }
 
     /// <summary>Effective horizontal center spacing (after auto-balance or manual roomSpacingX).</summary>
@@ -231,6 +269,11 @@ public class DungeonRoomSpawner : MonoBehaviour
 
     public void BuildDungeonAndPlacePlayer()
     {
+        BuildDungeonAndPlacePlayer(placeAtSavedWorldPosition: false, savedWorldPosition: default);
+    }
+
+    public void BuildDungeonAndPlacePlayer(bool placeAtSavedWorldPosition, Vector3 savedWorldPosition)
+    {
         if (dungeonState == null)
         {
             Debug.LogError("DungeonRoomSpawner: dungeonState is not assigned.", this);
@@ -250,6 +293,10 @@ public class DungeonRoomSpawner : MonoBehaviour
         }
 
         BuildDungeon();
-        PlacePlayerInStartRoom();
+
+        if (placeAtSavedWorldPosition && playerTransform != null)
+            playerTransform.position = savedWorldPosition;
+        else
+            PlacePlayerInStartRoom();
     }
 }

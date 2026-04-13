@@ -194,6 +194,11 @@ public class Door : MonoBehaviour
     [Tooltip("After a successful room transition, block further door triggers for this long so the player can leave the doorway.")]
     public float doorCooldownAfterTransitionSeconds = 1f;
 
+    [Header("Audio (optional)")]
+    [Tooltip("Played at this door when a room transition succeeds.")]
+    public AudioClip doorUseSound;
+    public AudioSource doorAudioSource;
+
     private static float s_lastSuccessfulDoorTransitionTime = -1000f;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -215,6 +220,19 @@ public class Door : MonoBehaviour
         }
 
         if (_roomController.TryMoveToAdjacentRoom(direction))
+        {
             s_lastSuccessfulDoorTransitionTime = Time.time;
+            PlayDoorSound();
+        }
+    }
+
+    void PlayDoorSound()
+    {
+        if (doorUseSound == null)
+            return;
+        if (doorAudioSource != null)
+            doorAudioSource.PlayOneShot(doorUseSound);
+        else
+            AudioSource.PlayClipAtPoint(doorUseSound, transform.position, 1f);
     }
 }

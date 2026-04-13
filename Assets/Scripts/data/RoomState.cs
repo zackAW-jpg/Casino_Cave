@@ -19,6 +19,9 @@ public class RoomState
     public bool visited;
     public bool cleared;
 
+    [Tooltip("When true, boss is not respawned and the cave exit beacon may appear.")]
+    public bool bossDefeated;
+
     public int distanceFromStart;
 
 }

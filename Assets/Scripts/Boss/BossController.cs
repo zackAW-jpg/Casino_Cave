@@ -72,10 +72,20 @@ public class BossController : MonoBehaviour
     [Header("Optional sound cues")]
     public AudioSource audioSource;
     public AudioClip slamTakeoffSfx;
+    [Tooltip("Used when Slam Land Variants is empty.")]
     public AudioClip slamLandSfx;
+    [Tooltip("Up to 5 different slam impacts; one is chosen at random. If empty, Slam Land Sfx is used.")]
+    public AudioClip[] slamLandVariantSfx = new AudioClip[5];
     public AudioClip chargeWindupSfx;
+    [Tooltip("Boss rush / dash starts (charge begins moving).")]
     public AudioClip chargeStartSfx;
     public AudioClip chargeWallCancelSfx;
+
+    [Header("Boss idle vocals (optional)")]
+    [Tooltip("Random one-shots while the player is in the boss room and the boss is not attacking.")]
+    public AudioClip[] bossIdleNoiseSounds;
+    public float bossIdleNoiseMinInterval = 5f;
+    public float bossIdleNoiseMaxInterval = 12f;
 
     [Header("Optional animation hooks")]
     public Animator animator;
@@ -107,6 +117,7 @@ public class BossController : MonoBehaviour
     private readonly Collider2D[] _overlapHits = new Collider2D[16];
     private bool _hasRoomBounds;
     private Bounds _roomBoundsWorld;
+    private float _nextBossIdleNoiseTime = -1f;
 
     private void Awake()
     {
@@ -236,6 +247,30 @@ public class BossController : MonoBehaviour
         {
             StartCoroutine(ChargeRoutine());
         }
+
+        TryPlayBossIdleNoise();
+    }
+
+    void TryPlayBossIdleNoise()
+    {
+        if (bossIdleNoiseSounds == null || bossIdleNoiseSounds.Length == 0)
+            return;
+        if (!IsPlayerInBossRoom() || _isAttacking || bossHealth == null)
+            return;
+        if (_roomEngageTimer > 0f)
+            return;
+        if (audioSource == null)
+            return;
+
+        if (_nextBossIdleNoiseTime < 0f)
+            _nextBossIdleNoiseTime = Time.time + Random.Range(bossIdleNoiseMinInterval, bossIdleNoiseMaxInterval);
+
+        if (Time.time < _nextBossIdleNoiseTime)
+            return;
+
+        AudioClip c = SfxUtil.PickRandomNonNull(bossIdleNoiseSounds);
+        PlayCue(c);
+        _nextBossIdleNoiseTime = Time.time + Random.Range(bossIdleNoiseMinInterval, bossIdleNoiseMaxInterval);
     }
 
     private IEnumerator SlamRoutine()
@@ -255,7 +290,7 @@ public class BossController : MonoBehaviour
         transform.localScale = _baseScale;
         TriggerAnim(slamLandTrigger);
         SpawnSlamVfx(slamLandVfxPrefab);
-        PlayCue(slamLandSfx);
+        PlaySlamLandCue();
 
         Vector2 center = transform.position;
         Collider2D[] hits = Physics2D.OverlapCircleAll(center, shockwaveRadius, slamHitMask);
@@ -482,6 +517,15 @@ public class BossController : MonoBehaviour
         if (clip == null || audioSource == null)
             return;
         audioSource.PlayOneShot(clip);
+    }
+
+    void PlaySlamLandCue()
+    {
+        AudioClip v = SfxUtil.PickRandomNonNull(slamLandVariantSfx);
+        if (v != null)
+            PlayCue(v);
+        else
+            PlayCue(slamLandSfx);
     }
 
     private bool TryGetChargeStepFromSweep(Vector2 direction, float requestedDistance, out float allowedDistance)

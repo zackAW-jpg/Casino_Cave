@@ -57,6 +57,12 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!GameplayInputGate.PlayerWorldActionsEnabled)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         if (_dodge != null && _dodge.IsDodging)
             return;
 

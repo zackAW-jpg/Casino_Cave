@@ -20,7 +20,7 @@ public class NpcDialogueSequenceTrigger : MonoBehaviour
     public float postChoiceHideSeconds = 0.8f;
 
     [Header("Audio (optional)")]
-    [Tooltip("Played when advancing between dialogue lines (not when opening the Yes/No prompt).")]
+    [Tooltip("NPC talk blip when advancing between lines (not when opening the Yes/No prompt).")]
     public AudioClip advanceLineSound;
     [Tooltip("If set, uses PlayOneShot; otherwise plays at this NPC's position.")]
     public AudioSource audioSource;
