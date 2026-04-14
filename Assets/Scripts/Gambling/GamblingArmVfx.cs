@@ -5,6 +5,18 @@ public class GamblingArmVfx : MonoBehaviour
 {
     [Header("Projectile attachments")]
     public GameObject projectileFireVfxPrefab;
+    public GameObject projectileIceVfxPrefab;
+
+    [Header("Projectile — Ice (when no dedicated ice prefab on GamblingArm)")]
+    [Tooltip("Multiplies sprite color before blending toward vivid ice blue.")]
+    public Color projectileIceSpriteTint = new Color(0.02f, 0.2f, 1f, 1f);
+
+    [Tooltip("Final blend toward this saturated ice blue (alpha from sprite).")]
+    public Color projectileIceVivid = new Color(0f, 0.35f, 1f, 1f);
+
+    [Range(0f, 1f)]
+    [Tooltip("How strongly to snap projectiles to vivid ice blue.")]
+    public float projectileIceVividBlend = 0.94f;
 
     [Header("Cinder (on enemy when fire DoT applies)")]
     public GameObject cinderBlackSmokePrefab;
@@ -45,6 +57,31 @@ public class GamblingArmVfx : MonoBehaviour
         fx.transform.localPosition = Vector3.zero;
         fx.transform.localRotation = Quaternion.identity;
         Destroy(fx, defaultVfxLifetime + 2f);
+    }
+
+    public void AttachProjectileIceFx(Transform projectile)
+    {
+        if (projectileIceVfxPrefab == null || projectile == null)
+            return;
+
+        GameObject fx = Instantiate(projectileIceVfxPrefab, projectile);
+        fx.transform.localPosition = Vector3.zero;
+        fx.transform.localRotation = Quaternion.identity;
+        Destroy(fx, defaultVfxLifetime + 2f);
+    }
+
+    public void ApplyProjectileIceSpriteTint(Transform projectile)
+    {
+        if (projectile == null)
+            return;
+
+        foreach (SpriteRenderer sr in projectile.GetComponentsInChildren<SpriteRenderer>(true))
+        {
+            Color c = sr.color;
+            Color baseTinted = c * projectileIceSpriteTint;
+            Color vivid = new Color(projectileIceVivid.r, projectileIceVivid.g, projectileIceVivid.b, c.a);
+            sr.color = Color.Lerp(baseTinted, vivid, projectileIceVividBlend);
+        }
     }
 
     public void SpawnCinderSmokeOnEnemy(Transform enemyRoot)

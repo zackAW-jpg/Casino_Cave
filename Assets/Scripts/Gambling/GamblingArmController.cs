@@ -36,6 +36,9 @@ public class GamblingArmController : MonoBehaviour
     public float projectileSpeed = 14f;
     [Range(0.05f, 2f)] public float projectileVisualScaleTuning = 0.35f;
 
+    [Tooltip("Extra Z rotation when spawning the boxing glove projectile. Aim aligns transform.right with shot direction; use -90 if your glove art faces +Y (typical).")]
+    public float gloveProjectileSpawnRotationOffsetDegrees = -90f;
+
     [Header("Mushroom modifier")]
     public float mushroomRadiusMul = 1.55f;
     public float mushroomProjectileScaleMul = 1.45f;
@@ -486,7 +489,7 @@ public class GamblingArmController : MonoBehaviour
         for (int s = 0; s < 3; s++)
         {
             Vector2 dir = Rotate(baseAim, angles[s] * Mathf.Deg2Rad);
-            SpawnProjectile(pref, dir, r, CalcDamage(shurikenDamageEach, r), scaleMul);
+            SpawnProjectile(pref, dir, r, CalcDamage(shurikenDamageEach, r), scaleMul, iceShurikenPrefab, 0f);
         }
 
         return false;
@@ -501,7 +504,14 @@ public class GamblingArmController : MonoBehaviour
             return false;
         }
 
-        SpawnProjectile(pref, aim, r, CalcDamage(gloveDamage, r), scaleMul);
+        SpawnProjectile(
+            pref,
+            aim,
+            r,
+            CalcDamage(gloveDamage, r),
+            scaleMul,
+            iceGlovePrefab,
+            gloveProjectileSpawnRotationOffsetDegrees);
         return false;
     }
 
@@ -512,11 +522,21 @@ public class GamblingArmController : MonoBehaviour
         return @default;
     }
 
-    private void SpawnProjectile(GameObject prefab, Vector2 dir, GamblingArmRollResult r, int damage, float scaleMul)
+    private void SpawnProjectile(
+        GameObject prefab,
+        Vector2 dir,
+        GamblingArmRollResult r,
+        int damage,
+        float scaleMul,
+        GameObject dedicatedIcePrefabForThisWeapon,
+        float spawnZRotationOffsetDegrees)
     {
+        bool applyRuntimeIceProjectileFx =
+            r.Modifier == GamblingModifierType.Ice && dedicatedIcePrefabForThisWeapon == null;
+
         Vector3 pos = _firePoint != null ? _firePoint.position : transform.position;
         float ang = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        Quaternion rot = Quaternion.AngleAxis(ang, Vector3.forward);
+        Quaternion rot = Quaternion.AngleAxis(ang + spawnZRotationOffsetDegrees, Vector3.forward);
         GameObject go = Instantiate(prefab, pos, rot);
         var gp = go.GetComponent<GamblingProjectile>();
         if (gp == null)
@@ -539,6 +559,7 @@ public class GamblingArmController : MonoBehaviour
             goldCoinPrefab,
             scaleMul,
             projectileVisualScaleTuning,
+            applyRuntimeIceProjectileFx,
             this,
             _vfx);
     }
@@ -549,9 +570,6 @@ public class GamblingArmController : MonoBehaviour
         float s = Mathf.Sin(radians);
         return new Vector2(c * v.x - s * v.y, s * v.x + c * v.y);
     }
-
-    
-    public bool BlocksCoinGun => enabled && GamblingArmRuntimeState.SlotsUnlocked;
 
     private void OnGUI()
     {

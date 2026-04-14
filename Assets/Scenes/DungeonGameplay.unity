@@ -2056,7 +2056,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5679762540515111097, guid: ddc7fd57df1f0b645868045a7e882138, type: 3}
+  m_Sprite: {fileID: 21300000, guid: db005d11213e5da47b9769c2e6c56eee, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2280,7 +2280,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5679762540515111097, guid: ddc7fd57df1f0b645868045a7e882138, type: 3}
+  m_Sprite: {fileID: 21300000, guid: db005d11213e5da47b9769c2e6c56eee, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4339,6 +4339,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 2536a5e95c641894ebf74c5f9e6ca9a7, type: 3}
     - target: {fileID: 7571927485519907787, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
+      propertyPath: iceGlovePrefab
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7571927485519907787, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
       propertyPath: fireAttackSound
       value: 
       objectReference: {fileID: 8300000, guid: d7f22823b6cec73449b612e1796fe904, type: 3}
@@ -4346,6 +4350,10 @@ PrefabInstance:
       propertyPath: meleeWhooshSound
       value: 
       objectReference: {fileID: 8300000, guid: eabf1a13f6ddf4a47acf4525ee00b1bc, type: 3}
+    - target: {fileID: 7571927485519907787, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
+      propertyPath: iceShurikenPrefab
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7571927485519907787, guid: e1b6ae21a3da574449d3a1530c1f0d0a, type: 3}
       propertyPath: shurikenWhooshSound
       value: 
@@ -4588,7 +4596,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5679762540515111097, guid: ddc7fd57df1f0b645868045a7e882138, type: 3}
+  m_Sprite: {fileID: 21300000, guid: db005d11213e5da47b9769c2e6c56eee, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5936,8 +5944,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -143.88, y: -68.74}
-  m_SizeDelta: {x: 59.51, y: 95.95}
+  m_AnchoredPosition: {x: -159.3, y: -85.9}
+  m_SizeDelta: {x: 56, y: 95.95}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1921828877
 MonoBehaviour:
@@ -6230,7 +6238,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5679762540515111097, guid: ddc7fd57df1f0b645868045a7e882138, type: 3}
+  m_Sprite: {fileID: 21300000, guid: db005d11213e5da47b9769c2e6c56eee, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6282,7 +6290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 82.87, y: -73.65}
+  m_AnchoredPosition: {x: 66.6, y: -85.7}
   m_SizeDelta: {x: 56.48, y: 97.97}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2031612789
@@ -6644,22 +6652,23 @@ MonoBehaviour:
   reelMiddle: {fileID: 2009990190}
   reelRight: {fileID: 2031612789}
   outerReelSprites:
-  - {fileID: 2055547294170262338, guid: 860c75cb038b81048883bd9c8f087aec, type: 3}
-  - {fileID: -1339188918809072334, guid: a6155e83f174da745a6abae9c761348a, type: 3}
-  - {fileID: -8308178086780133719, guid: a83e2c82c93f20a40a4302459b0534aa, type: 3}
-  - {fileID: 2334993938035900086, guid: c5901cb0af1ee9741ab54634250c016b, type: 3}
+  - {fileID: 21300000, guid: d2c0dc76eca05bb4eb4f3fc4a37f258d, type: 3}
+  - {fileID: 21300000, guid: 6b3b8ef492edc304f9230dc368e8af5c, type: 3}
+  - {fileID: 21300000, guid: 78040fcc3a5ca0646b20e131d68b3660, type: 3}
+  - {fileID: 21300000, guid: eab87f10d2afa594c92ed3d29451b618, type: 3}
   middleReelSprites:
-  - {fileID: 4959716890935848333, guid: 238ad20b62dcbf54f92604d8f86965fd, type: 3}
-  - {fileID: -4627268625810650242, guid: 2768f7a632ff728458adc11493353414, type: 3}
-  - {fileID: -8701070534432330781, guid: a4827abdae81cc64990e1e37dab019bf, type: 3}
-  - {fileID: 3514657357711530019, guid: b19fbaf1a0a45af48a399a83a250f572, type: 3}
-  - {fileID: 6858497235870011426, guid: ca2890914bd09534a81c55a455b8971c, type: 3}
+  - {fileID: 21300000, guid: e0c7d5a920e98fd47a926292adc0bec7, type: 3}
+  - {fileID: 21300000, guid: 5087bdcc637973d41abbd18802fb23d3, type: 3}
+  - {fileID: 21300000, guid: efe2ac1e04c61d1429e370eb4e493aa0, type: 3}
+  - {fileID: 21300000, guid: a34a8f8870f46c04dbe86c7ed173ba1f, type: 3}
+  - {fileID: 21300000, guid: 9e3850ff9c22c0949954069e855a2a44, type: 3}
   slotMachineBackground: {fileID: 0}
   maxReelSymbolSize: 96
   spinTickSeconds: 0.04
   slamScale: 1.12
   slamDurationSeconds: 0.08
   reelSpinTickSound: {fileID: 8300000, guid: 101de0eae45ca3a49ab19dcd8276e473, type: 3}
+  reelSpinTickVolumeScale: 1.35
   reelStopSoundsPerSlot:
   - {fileID: 8300000, guid: 101de0eae45ca3a49ab19dcd8276e473, type: 3}
   - {fileID: 8300000, guid: 101de0eae45ca3a49ab19dcd8276e473, type: 3}
@@ -6913,7 +6922,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5679762540515111097, guid: ddc7fd57df1f0b645868045a7e882138, type: 3}
+  m_Sprite: {fileID: 21300000, guid: db005d11213e5da47b9769c2e6c56eee, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -142,5 +142,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinPickup
   goldAmount: 1
-  chipSpriteRed: {fileID: -1600309601256133329, guid: 08b9a8712106ba246af309806c17ffa4, type: 3}
-  chipSpriteBlack: {fileID: 3152464754347480941, guid: 3d9841907e96112429e43d043412d902, type: 3}
+  chipSpriteRed: {fileID: 8398177327061345156, guid: fe06b44fd4e1f2d438d1da220943133e, type: 3}
+  chipSpriteBlack: {fileID: 3065360007632723912, guid: 666b173d96f389340b8f71ef9d29559f, type: 3}

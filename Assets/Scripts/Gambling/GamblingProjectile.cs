@@ -32,6 +32,7 @@ public class GamblingProjectile : MonoBehaviour
         GameObject goldPrefab,
         float scaleMul,
         float visualScaleTuning,
+        bool applyRuntimeIceProjectileFx,
         GamblingArmController arm,
         GamblingArmVfx vfx)
     {
@@ -52,6 +53,12 @@ public class GamblingProjectile : MonoBehaviour
 
         if (modifier == GamblingModifierType.Fire)
             _vfx?.AttachProjectileFireFx(transform);
+
+        if (applyRuntimeIceProjectileFx && modifier == GamblingModifierType.Ice)
+        {
+            _vfx?.AttachProjectileIceFx(transform);
+            _vfx?.ApplyProjectileIceSpriteTint(transform);
+        }
 
         var col = GetComponent<Collider2D>();
         col.isTrigger = true;
