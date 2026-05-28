@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72f87cf1f71864479e37809d3bdad1c, type: 3}
+  m_Name: AurenGenDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::AurenGenDefinition
+  aurenGenId: RideTheBusSchool
+  displayName: Ride The Bus
+  variantName: School Bus
+  maxDebtPoints: 100
+  damageMultiplier: 1
+  isUltimateVariant: 0
+  backSprite: {fileID: 0}
+  frontSprite: {fileID: 0}
+  backAnimatorController: {fileID: 0}
+  frontAnimatorController: {fileID: 0}
+  moves:
+  - {fileID: 11400000, guid: d72fe681a24212d41810b672edfc9db9, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
